@@ -20,6 +20,14 @@ public class MyAutoController extends CarController{
 		public MyAutoController(Car car) {
 			super(car);
 		}
+
+		private HashMap<Coordinate, MapTile> explored;
+
+		@Override
+		public MyAutoController(Car car){
+			super(car);
+			explored = new HashMap<Coordinate, MapTile>();
+		}
 		
 		// Coordinate initialGuess;
 		// boolean notSouth = true;
@@ -27,6 +35,9 @@ public class MyAutoController extends CarController{
 		public void update() {
 			// Gets what the car can see
 			HashMap<Coordinate, MapTile> currentView = getView();
+
+			// Adds what is seen to the new explored hashmap
+			explored.putAll(currentView);
 			
 			// checkStateChange();
 			if(getSpeed() < CAR_MAX_SPEED){       // Need speed to turn and progress toward the exit
