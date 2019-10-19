@@ -2,6 +2,7 @@ package mycontroller;
 
 import controller.CarController;
 import world.Car;
+import world.World;
 import java.util.HashMap;
 
 import tiles.MapTile;
@@ -160,8 +161,8 @@ public class MyAutoController extends CarController{
 
 		public void printMap(HashMap<Coordinate,MapTile> explored) {
 			Coordinate coord;
-			for (int y = 33; y >= 0; y--) {
-				for (int x = 0; x < 49; x++) {
+			for (int y = world.World.MAP_HEIGHT; y >= 0; y--) {
+				for (int x = 0; x < world.World.MAP_WIDTH; x++) {
 					coord = new Coordinate(x, y);
 					if (explored.containsKey(coord)) {
 						System.out.print("+");
