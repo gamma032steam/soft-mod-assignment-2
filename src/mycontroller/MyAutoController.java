@@ -48,13 +48,18 @@ public class MyAutoController extends CarController{
 			explored.putAll(currentView);
 			//printMap(explored);
 
+			if (getPosition().equals(testPath.get(step).toString())) {
+				System.out.println("Made it");
+				step++;
+			}
+
 			try {
 				driver.driveTowards(testPath.get(step));
 			} catch (Exception e) {
 				e.printStackTrace();
 				applyForwardAcceleration();
 			}
-			step++;
+
 
 			// TODO: I don't think we need this? I think it's just the wall-following algorithm
 			/*

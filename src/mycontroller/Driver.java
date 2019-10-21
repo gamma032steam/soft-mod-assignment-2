@@ -26,10 +26,12 @@ public class Driver {
         WorldSpatial.Direction currentOrientation = carController.getOrientation();
         WorldSpatial.Direction direction = findDirection(currentPosition, adjacentDestination);
         RelativeDirection relativeDirection = findRelativeDirection(currentOrientation, direction);
+        control(relativeDirection);
     }
 
     /** Turn based on a relative direction to the current car position */
     public void control(RelativeDirection relativeDirection) {
+        System.out.println(relativeDirection);
         switch (relativeDirection) {
             case LEFT :
                 carController.turnLeft();
@@ -43,12 +45,14 @@ public class Driver {
                 } else {
                     carController.applyBrake();
                 }
+                break;
             case BEHIND:
                 if (carController.getSpeed() <= 0) {
                     carController.applyReverseAcceleration();
                 } else {
                     carController.applyBrake();
                 }
+                break;
         }
     }
 
