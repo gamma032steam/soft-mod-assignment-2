@@ -34,24 +34,24 @@ public class Driver {
         System.out.println(relativeDirection);
         switch (relativeDirection) {
             case LEFT :
-                carController.turnLeft();
+                if (carController.getSpeed() != 0) {
+                    carController.turnLeft();
+                } else {
+                    carController.applyForwardAcceleration();
+                }
                 break;
             case RIGHT:
-                carController.turnRight();
+                if (carController.getSpeed() != 0) {
+                    carController.turnRight();
+                } else {
+                    carController.applyForwardAcceleration();
+                }
                 break;
             case AHEAD:
-                if (carController.getSpeed() >= 0) {
-                    carController.applyForwardAcceleration();
-                } else {
-                    carController.applyBrake();
-                }
+                carController.applyForwardAcceleration();
                 break;
             case BEHIND:
-                if (carController.getSpeed() <= 0) {
-                    carController.applyReverseAcceleration();
-                } else {
-                    carController.applyBrake();
-                }
+                carController.applyReverseAcceleration();
                 break;
         }
     }
@@ -110,6 +110,7 @@ public class Driver {
 
     /** Returns the compass direction to the right (plus 90 degrees) */
     private WorldSpatial.Direction rightDirection(WorldSpatial.Direction direction) {
+        // TODO: Make this a switch
         if (direction == WorldSpatial.Direction.NORTH) {
             return WorldSpatial.Direction.EAST;
         } else if (direction == WorldSpatial.Direction.EAST) {
@@ -124,6 +125,7 @@ public class Driver {
 
     /** Returns the opposite compass direction */
     private WorldSpatial.Direction oppositeDirection (WorldSpatial.Direction direction) {
+        // TODO: Make this a switch
         if (direction == WorldSpatial.Direction.NORTH) {
             return WorldSpatial.Direction.SOUTH;
         } else if (direction == WorldSpatial.Direction.SOUTH) {

@@ -31,8 +31,8 @@ public class MyAutoController extends CarController{
 			super(car);
 			explored = new HashMap<Coordinate, MapTile>();
 
-			testPath.add(new Coordinate(3, 3));
-			testPath.add(new Coordinate(3, 4));
+			testPath.add(new Coordinate(2, 3));
+			testPath.add(new Coordinate(2, 4));
 		}
 
 		// Test iterator
@@ -48,10 +48,12 @@ public class MyAutoController extends CarController{
 			explored.putAll(currentView);
 			//printMap(explored);
 
-			if (getPosition().equals(testPath.get(step).toString())) {
-				System.out.println("Made it");
-				step++;
-			}
+			try {
+				if (getPosition().equals(testPath.get(step).toString())) {
+					System.out.println("Made it");
+					step++;
+				}
+			} catch (Exception e) { }
 
 			try {
 				driver.driveTowards(testPath.get(step));
