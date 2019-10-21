@@ -9,7 +9,7 @@ import java.security.InvalidAlgorithmParameterException;
 public class Driver {
     private CarController carController;
 
-    private enum relativeDirection {
+    private enum RelativeDirection {
         AHEAD,
         BEHIND,
         LEFT,
@@ -25,7 +25,31 @@ public class Driver {
         Coordinate currentPosition = new Coordinate(carController.getPosition());
         WorldSpatial.Direction currentOrientation = carController.getOrientation();
         WorldSpatial.Direction direction = findDirection(currentPosition, adjacentDestination);
+        RelativeDirection relativeDirection = findRelativeDirection(currentOrientation, direction);
+    }
 
+    /** Turn based on a relative direction to the current car position */
+    public void control(RelativeDirection relativeDirection) {
+        switch (relativeDirection) {
+            case LEFT :
+                carController.turnLeft();
+                break;
+            case RIGHT:
+                carController.turnRight();
+                break;
+            case AHEAD:
+                if (carController.getSpeed() >= 0) {
+                    carController.applyForwardAcceleration();
+                } else {
+                    carController.applyBrake();
+                }
+            case BEHIND:
+                if (carController.getSpeed() <= 0) {
+                    carController.applyReverseAcceleration();
+                } else {
+                    carController.applyBrake();
+                }
+        }
     }
 
     /** Find the compass direction to the destination */
@@ -62,17 +86,17 @@ public class Driver {
     }
 
     /** Returns the direction our car needs to move to reach the destination */
-    private relativeDirection findRelativeDirection (WorldSpatial.Direction currentOrientation,
+    private RelativeDirection findRelativeDirection (WorldSpatial.Direction currentOrientation,
                                                      WorldSpatial.Direction direction) {
         if (currentOrientation == direction) {
-            return relativeDirection.AHEAD;
+            return RelativeDirection.AHEAD;
         } else if (oppositeDirection(currentOrientation) == direction) {
-            return relativeDirection.BEHIND;
+            return RelativeDirection.BEHIND;
         } else if (rightDirection(currentOrientation) == direction) {
-           return relativeDirection.RIGHT;
+           return RelativeDirection.RIGHT;
         } else {
             // Must be left
-            return 
+            return RelativeDirection.LEFT;
         }
 
 

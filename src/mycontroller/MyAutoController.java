@@ -3,6 +3,8 @@ package mycontroller;
 import controller.CarController;
 import world.Car;
 import world.World;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import tiles.MapTile;
@@ -21,10 +23,17 @@ public class MyAutoController extends CarController{
 		/** Tiles of the map discovered so far */
 		private HashMap<Coordinate, MapTile> explored;
 
+		/** Drives the car on behalf of the controller */
+		Driver driver = new Driver(this);
+
 		public MyAutoController(Car car) {
 			super(car);
 			explored = new HashMap<Coordinate, MapTile>();
 		}
+
+		// Test iterator
+		//static int step = 0;
+		//ArrayList<Coordinate>
 
 		@Override
 		public void update() {
@@ -34,7 +43,11 @@ public class MyAutoController extends CarController{
 			// Adds what is seen to the new explored hashmap
 			explored.putAll(currentView);
 			printMap(explored);
-			
+
+
+
+			// TODO: I don't think we need this? I think it's just the wall-following algorithm
+			/*
 			// checkStateChange();
 			if(getSpeed() < CAR_MAX_SPEED){       // Need speed to turn and progress toward the exit
 				applyForwardAcceleration();   // Tough luck if there's a wall in the way
@@ -56,6 +69,7 @@ public class MyAutoController extends CarController{
 					isFollowingWall = true;
 				}
 			}
+			*/
 		}
 
 		/**
