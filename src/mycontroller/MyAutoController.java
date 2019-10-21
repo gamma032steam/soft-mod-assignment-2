@@ -17,16 +17,15 @@ public class MyAutoController extends CarController{
 		
 		// Car Speed to move at
 		private final int CAR_MAX_SPEED = 1;
-		
+
+		/** Tiles of the map discovered so far */
+		private HashMap<Coordinate, MapTile> explored;
+
 		public MyAutoController(Car car) {
 			super(car);
 			explored = new HashMap<Coordinate, MapTile>();
 		}
 
-		private HashMap<Coordinate, MapTile> explored;
-		
-		// Coordinate initialGuess;
-		// boolean notSouth = true;
 		@Override
 		public void update() {
 			// Gets what the car can see
