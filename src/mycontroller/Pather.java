@@ -1,6 +1,7 @@
 package mycontroller;
 
 import tiles.MapTile;
+import tiles.TrapTile;
 import utilities.Coordinate;
 import world.World;
 
@@ -10,7 +11,7 @@ public class Pather {
 
     /**
      * Gets this cool shit and finds da way
-     * @param route
+     * @param root
      * @param explored
      */
     public static void dijkstra(Coordinate root, HashMap<Coordinate, MapTile> explored, MapTile objective) {
@@ -68,10 +69,25 @@ public class Pather {
      * @param candidate
      * @return
      */
-    private static int weighCoordinate(HashMap<Coordinate, MapTile> explored, Coordinate candidate) {
+    private static Integer weighCoordinate(HashMap<Coordinate, MapTile> explored, Coordinate candidate) {
         if (candidate.x >= 0 && candidate.x < World.MAP_WIDTH) {
             if (candidate.y >= 0 && candidate.y < World.MAP_HEIGHT) {
-                return 1;
+                MapTile tile = explored.get(candidate);
+                if (tile.getType().equals(MapTile.Type.TRAP)) {
+                    TrapTile trap = (TrapTile) tile;
+                    switch (trap.getTrap()) {
+                        case "lava":
+                            return 10000;
+                        case "mud":
+                            return -1;
+                        case "water":
+                            return 1;
+                        case "parcel":
+                            return Integer.MIN_VALUE;
+
+
+                    }
+                }
             }
         }
     }
