@@ -20,13 +20,15 @@ public class Driver {
         this.carController = carController;
     }
 
+    /** Move towards an adjacent tile */
     public void driveTowards(Coordinate adjacentDestination) throws InvalidAlgorithmParameterException {
         Coordinate currentPosition = new Coordinate(carController.getPosition());
         WorldSpatial.Direction currentOrientation = carController.getOrientation();
         WorldSpatial.Direction direction = findDirection(currentPosition, adjacentDestination);
-        
+
     }
 
+    /** Find the compass direction to the destination */
     private WorldSpatial.Direction findDirection(Coordinate source, Coordinate destination)
             throws InvalidAlgorithmParameterException {
         int deltaX = destination.x - source.x;
@@ -59,17 +61,48 @@ public class Driver {
         }
     }
 
-    /*
-    private relativeDirection findRelativeDirection(Coordinate source,
-                                                    Coordinate destination, WorldSpatial.Direction orientation) {
-        int deltaX = destination.x - source.x;
-        int deltaY = destination.y - source.y;
-
-        if (deltaX == 0) {
-            // Either above or below us
-            if (deltaY > 0) {
-
-            }
+    /** Returns the direction our car needs to move to reach the destination */
+    private relativeDirection findRelativeDirection (WorldSpatial.Direction currentOrientation,
+                                                     WorldSpatial.Direction direction) {
+        if (currentOrientation == direction) {
+            return relativeDirection.AHEAD;
+        } else if (oppositeDirection(currentOrientation) == direction) {
+            return relativeDirection.BEHIND;
+        } else if (rightDirection(currentOrientation) == direction) {
+           return relativeDirection.RIGHT;
+        } else {
+            // Must be left
+            return 
         }
-    }*/
+
+
+    }
+
+    /** Returns the compass direction to the right (plus 90 degrees) */
+    private WorldSpatial.Direction rightDirection(WorldSpatial.Direction direction) {
+        if (direction == WorldSpatial.Direction.NORTH) {
+            return WorldSpatial.Direction.EAST;
+        } else if (direction == WorldSpatial.Direction.EAST) {
+            return WorldSpatial.Direction.SOUTH;
+        } else if (direction == WorldSpatial.Direction.SOUTH) {
+            return WorldSpatial.Direction.WEST;
+        } else {
+            // West
+            return WorldSpatial.Direction.NORTH;
+        }
+    }
+
+    /** Returns the opposite compass direction */
+    private WorldSpatial.Direction oppositeDirection (WorldSpatial.Direction direction) {
+        if (direction == WorldSpatial.Direction.NORTH) {
+            return WorldSpatial.Direction.SOUTH;
+        } else if (direction == WorldSpatial.Direction.SOUTH) {
+            return WorldSpatial.Direction.NORTH;
+        } else if (direction == WorldSpatial.Direction.EAST) {
+            return WorldSpatial.Direction.WEST;
+        } else {
+            // West
+            return WorldSpatial.Direction.EAST;
+        }
+    }
 }
