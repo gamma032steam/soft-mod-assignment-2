@@ -4,6 +4,7 @@ import controller.CarController;
 import world.Car;
 import world.World;
 
+import java.security.InvalidAlgorithmParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -29,11 +30,14 @@ public class MyAutoController extends CarController{
 		public MyAutoController(Car car) {
 			super(car);
 			explored = new HashMap<Coordinate, MapTile>();
+
+			testPath.add(new Coordinate(3, 3));
+			testPath.add(new Coordinate(3, 4));
 		}
 
 		// Test iterator
-		//static int step = 0;
-		//ArrayList<Coordinate>
+		int step = 0;
+		ArrayList<Coordinate> testPath = new ArrayList<>();
 
 		@Override
 		public void update() {
@@ -42,9 +46,15 @@ public class MyAutoController extends CarController{
 
 			// Adds what is seen to the new explored hashmap
 			explored.putAll(currentView);
-			printMap(explored);
+			//printMap(explored);
 
-
+			try {
+				driver.driveTowards(testPath.get(step));
+			} catch (Exception e) {
+				e.printStackTrace();
+				applyForwardAcceleration();
+			}
+			step++;
 
 			// TODO: I don't think we need this? I think it's just the wall-following algorithm
 			/*
