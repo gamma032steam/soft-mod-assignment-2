@@ -2,6 +2,7 @@ package mycontroller;
 
 import controller.CarController;
 import world.Car;
+import world.World;
 import java.util.HashMap;
 
 import tiles.MapTile;
@@ -19,7 +20,10 @@ public class MyAutoController extends CarController{
 		
 		public MyAutoController(Car car) {
 			super(car);
+			explored = new HashMap<Coordinate, MapTile>();
 		}
+
+		private HashMap<Coordinate, MapTile> explored;
 		
 		// Coordinate initialGuess;
 		// boolean notSouth = true;
@@ -27,6 +31,10 @@ public class MyAutoController extends CarController{
 		public void update() {
 			// Gets what the car can see
 			HashMap<Coordinate, MapTile> currentView = getView();
+
+			// Adds what is seen to the new explored hashmap
+			explored.putAll(currentView);
+			printMap(explored);
 			
 			// checkStateChange();
 			if(getSpeed() < CAR_MAX_SPEED){       // Need speed to turn and progress toward the exit
@@ -148,6 +156,22 @@ public class MyAutoController extends CarController{
 				}
 			}
 			return false;
+		}
+
+
+		public void printMap(HashMap<Coordinate,MapTile> explored) {
+			Coordinate coord;
+			for (int y = world.World.MAP_HEIGHT; y >= 0; y--) {
+				for (int x = 0; x < world.World.MAP_WIDTH; x++) {
+					coord = new Coordinate(x, y);
+					if (explored.containsKey(coord)) {
+						System.out.print("+");
+					} else {
+						System.out.print("-");
+					}
+				}
+				System.out.println();
+			}
 		}
 		
 	}
