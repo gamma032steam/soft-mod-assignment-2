@@ -6,6 +6,7 @@ import utilities.Coordinate;
 import world.World;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Pather {
 
@@ -126,9 +127,10 @@ public class Pather {
         Coordinate found = null;
         while (!tentativeDistance.isEmpty()) {
             Coordinate u = getMin(tentativeDistance);
+            System.out.println("Min:" + u);
             seen.add(u);
             tentativeDistance.remove(u);
-            System.out.format("Uh: %s\n", explored.get(u).getType().toString());
+            //System.out.format("Uh: %s\n", explored.get(u).getType().toString());
 
             // Found the closest objective
             if (u.equals(destination)) {
@@ -146,8 +148,10 @@ public class Pather {
 
                 candidateTentative = tentativeDistance.get(u) + vDistance;
                 if (candidateTentative < tentativeDistance.get(v)) {
+                    // New shortest path
                     tentativeDistance.replace(v, candidateTentative);
                     previous.replace(v, u);
+                    System.out.println(v + "  " + u);
                 }
 
             }
@@ -160,9 +164,92 @@ public class Pather {
         Coordinate x = found, y = null;
         while (!x.equals(root)) {
             y = x;
+            System.out.println(y);
             x = previous.get(y);
+            System.out.println(x);
         }
+
         return y;
+    }
+
+    public static Coordinate dijkstra2(Coordinate root, HashMap<Coordinate, MapTile> explored, Coordinate target) {
+        // Distance to a node
+        HashMap<Coordinate, Integer> distance = new HashMap<>();
+        // Previous neighbour node
+        HashMap<Coordinate, Coordinate> previous = new HashMap<>();
+        // Unexplored nodes
+        ArrayList<Coordinate> unexplored = new ArrayList<>();
+
+        // Set all nodes to infinity distance and no parent
+        for (Coordinate coordinate: explored.keySet()) {
+            // Get rid of empty, wall tiles
+            if (!isTraversable(explored.get(coordinate))) {
+                continue;
+            }
+            distance.put(coordinate, Integer.MAX_VALUE);
+            previous.put(coordinate, null);
+            unexplored.add(coordinate);
+        }
+
+        // 'Find' the source cell
+        distance.replace(root, 0);
+        Coordinate finalNode = null;
+
+        while(!unexplored.isEmpty()) {
+            // Construct a hashmap with the distances of unexplored nodes
+            // TODO: This is a bit inefficient
+            HashMap<Coordinate, Integer> unexploredDistances = new HashMap<>();
+            for (Coordinate coordinate: unexplored) {
+                unexploredDistances.put(coordinate, distance.get(coordinate));
+            }
+            // Get the current node as the one with the smallest distance
+            Coordinate currentNode = getMin(unexploredDistances);
+            unexplored.remove(currentNode);
+
+            // See if we reached the goal
+            if (currentNode.equals(target)) {
+                // Found it, let's backtrack
+                finalNode = currentNode;
+                break;
+            }
+
+            // Get the neighbours
+            System.out.println(getNeighbours(currentNode).size());
+            for (Coordinate neighbour: getNeighbours(currentNode)) {
+                // Not valid if we're not tracking the distance for this coordinate (can't see/drive on it)
+                if (!distance.containsKey(neighbour)) {
+                    continue;
+                }
+
+                // Distance is the distance to the current node plus one extra step
+                int newDistance = distance.get(currentNode) + 1;
+
+                // Is this the better distance?
+                if (newDistance < distance.get(neighbour)) {
+                    distance.put(neighbour, newDistance);
+                    previous.put(neighbour, currentNode);
+                }
+            }
+        }
+
+        // Did we find it? If not, return null for safety
+        if (finalNode == null) {
+            return null;
+        }
+
+        // Backtrack to the node before the root
+        Coordinate curr = finalNode, next = previous.get(curr);
+        while(!next.equals(root)) {
+            curr = next;
+            next = previous.get(next);
+        }
+
+        return curr;
+    }
+
+    private static Boolean isTraversable(MapTile tile) {
+        return !isSameType(tile, new MapTile(MapTile.Type.WALL)) &&
+               !isSameType(tile, new MapTile(MapTile.Type.EMPTY ));
     }
 
     /**
@@ -187,8 +274,8 @@ public class Pather {
      */
     private static HashSet<Coordinate> getNeighbours(Coordinate root) {
         HashSet<Coordinate> neighbours = new HashSet<>();
-        for (int dx = -1; dx <= 1; dx += 2) {
-            for (int dy = -1; dy <= 1; dy += 2) {
+        for (int dx = -1; dx <= 1; dx += 1) {
+            for (int dy = -1; dy <= 1; dy += 1) {
                 Coordinate candidate = new Coordinate(root.x + dx, root.y + dy);
                 if (Math.abs(dx + dy) == 1 && isWithinWorldBoundaries(candidate)) {
                     neighbours.add(candidate);
