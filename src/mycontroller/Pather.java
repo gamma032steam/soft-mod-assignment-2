@@ -17,26 +17,27 @@ public class Pather {
     private static HashMap<String, Integer> DEFAULT_TRAP_WEIGHT = defaultTrapWeightInitialiser();
 
     private static HashMap<String, Integer> defaultTrapWeightInitialiser() {
-        HashMap<String, Integer> defaultTrapWeight = new HashMap<String, Integer>;
+        HashMap<String, Integer> defaultTrapWeight = new HashMap<String, Integer>();
         defaultTrapWeight.put("lava", AVOID_WEIGHT);
         defaultTrapWeight.put("parcel", DEFAULT_WEIGHT);
         defaultTrapWeight.put("mud", IMPASSABLE_WEIGHT);
         defaultTrapWeight.put("water", DEFAULT_WEIGHT);
         defaultTrapWeight.put("health", DEFAULT_WEIGHT);
         defaultTrapWeight.put("grass", AVOID_WEIGHT);
-        return defaultTrapWeight
+        return defaultTrapWeight;
     }
 
     private static HashMap<MapTile.Type, Integer> DEFAULT_NON_TRAP_WEIGHT = defaultNonTrapWeightInitialiser();
 
     private static HashMap<MapTile.Type, Integer> defaultNonTrapWeightInitialiser() {
-        HashMap<String, Integer> defaultNonTrapWeight = new HashMap<String, Integer>;
+        HashMap<MapTile.Type, Integer> defaultNonTrapWeight = new HashMap<MapTile.Type, Integer>();
         defaultNonTrapWeight.put(MapTile.Type.WALL, IMPASSABLE_WEIGHT);
         defaultNonTrapWeight.put(MapTile.Type.UTILITY, DEFAULT_WEIGHT);
         defaultNonTrapWeight.put(MapTile.Type.START, DEFAULT_WEIGHT);
         defaultNonTrapWeight.put(MapTile.Type.FINISH, DEFAULT_WEIGHT);
         defaultNonTrapWeight.put(MapTile.Type.ROAD, DEFAULT_WEIGHT);
         defaultNonTrapWeight.put(MapTile.Type.EMPTY, DEFAULT_WEIGHT);
+        return defaultNonTrapWeight;
     }
 
     /**
