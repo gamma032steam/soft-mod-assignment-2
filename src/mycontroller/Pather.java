@@ -45,6 +45,13 @@ public class Pather {
         return defaultNonTrapWeight;
     }
 
+    /**
+     * returns the move that will get you to the target the fastest, null if unreachable
+     * @param root
+     * @param explored
+     * @param target
+     * @return
+     */
     public static Coordinate getNextMove(Coordinate root, HashMap<Coordinate, MapTile> explored, Coordinate target) {
         dijkstra(root, explored, target);
 
@@ -63,6 +70,13 @@ public class Pather {
         return curr;
     }
 
+    /**
+     * returns coordinate that is closest, null if all are unreachable.
+     * @param root
+     * @param explored
+     * @param targets
+     * @return
+     */
     public static Coordinate getNearest(Coordinate root, HashMap<Coordinate, MapTile> explored, Coordinate[] targets) {
         Coordinate closestCoordinate = null;
         Integer closestCoordinateDistance = Integer.MAX_VALUE;
@@ -76,6 +90,13 @@ public class Pather {
         return closestCoordinate;
     }
 
+    /**
+     * returns a boolean of whether the target is reachable
+     * @param root
+     * @param explored
+     * @param target
+     * @return
+     */
     public static Boolean canReach(Coordinate root, HashMap<Coordinate, MapTile> explored, Coordinate target) {
         dijkstra(root, explored, target);
         return (!distance.get(target).equals(Integer.MAX_VALUE));
