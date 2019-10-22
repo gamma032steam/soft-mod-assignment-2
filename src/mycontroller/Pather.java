@@ -44,7 +44,7 @@ public class Pather {
      * @param root
      * @param explored
      */
-    public static void dijkstra(Coordinate root, HashMap<Coordinate, MapTile> explored, MapTile objective) {
+    public static Coordinate dijkstra(Coordinate root, HashMap<Coordinate, MapTile> explored, MapTile objective) {
         // Initialising the best distances map
         // As well as the previous map, will be used to trace back the route later
         HashMap<Coordinate, Integer> tentativeDistance = new HashMap<>();
@@ -57,11 +57,17 @@ public class Pather {
         tentativeDistance.replace(root, 0);
 
         HashSet<Coordinate> seen = new HashSet<>();
-        // TODO probs this while loop condition is off
+        Coordinate found = null;
         while (!tentativeDistance.isEmpty()) {
             Coordinate u = getMin(tentativeDistance);
             seen.add(u);
             tentativeDistance.remove(u);
+
+            // Found the closest objective
+            if (isSameType(explored.get(u), objective)) {
+                found = u;
+                break;
+            }
 
             Integer vDistance, candidateTentative;
             for (Coordinate v : getNeighbours(u)) {
@@ -78,7 +84,16 @@ public class Pather {
 
             }
 
-            // TODO RETURN THE BOY
+            if (found == null) {
+                return null;
+            }
+
+            Coordinate x = found, y = null;
+            while (!x.equals(root)) {
+                y = x;
+                x = previous.get(y);
+            }
+            return x;
         }
 
 
@@ -151,5 +166,18 @@ public class Pather {
             }
         }
         return DEFAULT_TRAP_WEIGHT.get(trap.getTrap());
+    }
+
+    private static boolean isSameType(MapTile a, MapTile b) {
+        if (a.getType().equals(b.getType())) {
+            if (a.getType().equals(MapTile.Type.TRAP)) {
+                TrapTile aTrap = (TrapTile) a;
+                TrapTile bTrap = (TrapTile) b;
+                return aTrap.getTrap().equals(bTrap.getTrap())
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
 }
