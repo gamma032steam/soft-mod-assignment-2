@@ -30,21 +30,7 @@ public class MyAutoController extends CarController{
 		public MyAutoController(Car car) {
 			super(car);
 			explored = new HashMap<Coordinate, MapTile>();
-
-			testPath.add(new Coordinate(3, 3));
-			testPath.add(new Coordinate(3, 4));
-			testPath.add(new Coordinate(3, 5));
-			testPath.add(new Coordinate(3, 6));
-			testPath.add(new Coordinate(3, 7));
-			testPath.add(new Coordinate(3, 6));
-			testPath.add(new Coordinate(3, 5));
-			testPath.add(new Coordinate(3, 4));
-			testPath.add(new Coordinate(2, 4));
 		}
-
-		// Test iterator
-		int step = 0;
-		ArrayList<Coordinate> testPath = new ArrayList<>();
 
 		@Override
 		public void update() {
@@ -56,14 +42,8 @@ public class MyAutoController extends CarController{
 			//printMap(explored);
 
 			try {
-				if (getPosition().equals(testPath.get(step).toString())) {
-					System.out.println("Made it");
-					step++;
-				}
-			} catch (Exception e) { }
-
-			try {
-				driver.driveTowards(testPath.get(step));
+				// TODO: Give me the path
+				// driver.driveTowards(testPath.get(step));
 			} catch (Exception e) {
 				e.printStackTrace();
 				applyForwardAcceleration();

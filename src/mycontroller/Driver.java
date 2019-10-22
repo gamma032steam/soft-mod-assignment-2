@@ -36,9 +36,7 @@ public class Driver {
 
     /** Turn based on a relative direction to the current car position */
     public void control(RelativeDirection relativeDirection) {
-        System.out.println(relativeDirection);
         float speed = carController.getSpeed();
-        System.out.print(speed + "   " + inReverse);
         switch (relativeDirection) {
             case LEFT :
                 // Turn left if we have the speed
