@@ -134,19 +134,8 @@ public class Pather {
         Coordinate finalNode = null;
 
         while(!queue.isEmpty()) {
-            // Construct a hashmap with the distances of unexplored nodes
-            // TODO: This is a bit inefficient
-
-            /*
-            HashMap<Coordinate, Integer> unexploredDistances = new HashMap<>();
-            for (Coordinate coordinate: unexplored) {
-                unexploredDistances.put(coordinate, distance.get(coordinate));
-            }
-            */
-
-            // Get the current node as the one with the smallest distance
+            // Get the current node as the one with the smallest distance that has not been visited already
             Coordinate currentNode = getMin(queue);
-
             queue.remove(currentNode);
 
             // Never pick impossible tiles just because we can see them
@@ -165,7 +154,7 @@ public class Pather {
             // Get the neighbours
             System.out.println(getNeighbours(currentNode).size());
             for (Coordinate neighbour: getNeighbours(currentNode)) {
-                // Not valid if we're not tracking the distance for this coordinate (can't see/drive on it)
+                // This is a node we've already processed so we shouldn't process it again
                 if (!queue.containsKey(neighbour)) {
                     continue;
                 }
