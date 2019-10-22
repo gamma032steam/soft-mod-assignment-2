@@ -172,6 +172,13 @@ public class Pather {
         return y;
     }
 
+    /**
+     * Finds the shortest path to the target, moving only vertically or horizontally.
+     * @param root Source location for the search
+     * @param explored Map of available coordinates
+     * @param target Destination for the search
+     * @return The first coordinate in the path from the root. Null if the target was unreachable.
+     */
     public static Coordinate dijkstra2(Coordinate root, HashMap<Coordinate, MapTile> explored, Coordinate target) {
         // Distance to a node
         HashMap<Coordinate, Integer> distance = new HashMap<>();
@@ -205,6 +212,12 @@ public class Pather {
             // Get the current node as the one with the smallest distance
             Coordinate currentNode = getMin(unexploredDistances);
             unexplored.remove(currentNode);
+
+            // Never pick impossible tiles just because we can see them
+            if (distance.get(currentNode) == Integer.MAX_VALUE) {
+                // Return null for safety
+                return null;
+            }
 
             // See if we reached the goal
             if (currentNode.equals(target)) {
@@ -247,6 +260,11 @@ public class Pather {
         return curr;
     }
 
+    /**
+     * Analyses a tile for properties that would prevent a car from driving over it
+     * @param tile Tile to analyse
+     * @return True if a car could drive on this tile, False otherwise
+     */
     private static Boolean isTraversable(MapTile tile) {
         return !isSameType(tile, new MapTile(MapTile.Type.WALL)) &&
                !isSameType(tile, new MapTile(MapTile.Type.EMPTY ));
@@ -273,10 +291,13 @@ public class Pather {
      * @return
      */
     private static HashSet<Coordinate> getNeighbours(Coordinate root) {
+        // Build a set of adjacent coordinates
         HashSet<Coordinate> neighbours = new HashSet<>();
+        // Generate adjacent cells (including diagonals)
         for (int dx = -1; dx <= 1; dx += 1) {
             for (int dy = -1; dy <= 1; dy += 1) {
                 Coordinate candidate = new Coordinate(root.x + dx, root.y + dy);
+                // Remove diagonals and enforce game border
                 if (Math.abs(dx + dy) == 1 && isWithinWorldBoundaries(candidate)) {
                     neighbours.add(candidate);
                 }
