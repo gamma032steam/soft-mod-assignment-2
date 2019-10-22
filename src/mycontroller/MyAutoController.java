@@ -42,11 +42,10 @@ public class MyAutoController extends CarController{
 			explored.putAll(currentView);
 			//printMap(explored);
 			try {
-				Coordinate target = Pather.dijkstra(new Coordinate(getPosition()), explored, new ParcelTrap());
+				Coordinate target = Pather.dijkstra(new Coordinate(getPosition()), explored, new Coordinate(4, 5));
 				driver.driveTowards(target);
 			} catch (Exception e) {
 				e.printStackTrace();
-				applyForwardAcceleration();
 			}
 		}
 

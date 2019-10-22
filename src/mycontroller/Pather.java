@@ -36,23 +36,24 @@ public class Pather {
         defaultNonTrapWeight.put(MapTile.Type.START, DEFAULT_WEIGHT);
         defaultNonTrapWeight.put(MapTile.Type.FINISH, DEFAULT_WEIGHT);
         defaultNonTrapWeight.put(MapTile.Type.ROAD, DEFAULT_WEIGHT);
-        defaultNonTrapWeight.put(MapTile.Type.EMPTY, DEFAULT_WEIGHT);
+        defaultNonTrapWeight.put(MapTile.Type.EMPTY, IMPASSABLE_WEIGHT);
+        defaultNonTrapWeight.put(MapTile.Type.TRAP, DEFAULT_WEIGHT); // Shouldn't happen
         return defaultNonTrapWeight;
     }
 
-    /**
-     * Gets this cool shit and finds da way
-     * @param root
-     * @param explored
-     */
+    /*
     public static Coordinate dijkstra(Coordinate root, HashMap<Coordinate, MapTile> explored, MapTile objective) {
         // Initialising the best distances map
         // As well as the previous map, will be used to trace back the route later
         HashMap<Coordinate, Integer> tentativeDistance = new HashMap<>();
         HashMap<Coordinate, Coordinate> previous = new HashMap<>();
         for (Coordinate location : explored.keySet()) {
-            tentativeDistance.put(location, Integer.MAX_VALUE);
-            previous.put(location, null);
+            if (!isSameType(explored.get(location), new MapTile(MapTile.Type.WALL)) &&
+                !isSameType(explored.get(location), new MapTile(MapTile.Type.EMPTY))) {
+                System.out.println("Test");
+                tentativeDistance.put(location, Integer.MAX_VALUE);
+                previous.put(location, null);
+            }
         }
         // Root node has distance 0
         tentativeDistance.replace(root, 0);
@@ -63,6 +64,7 @@ public class Pather {
             Coordinate u = getMin(tentativeDistance);
             seen.add(u);
             tentativeDistance.remove(u);
+            System.out.format("Uh: %s\n", explored.get(u).getType().toString());
 
             // Found the closest objective
             if (isSameType(explored.get(u), objective)) {
@@ -74,6 +76,70 @@ public class Pather {
             Integer vDistance, candidateTentative;
             for (Coordinate v : getNeighbours(u)) {
                 vDistance = weighTile(explored.get(v), objective);
+                if (seen.contains(v) || vDistance.equals(IMPASSABLE_WEIGHT)) {
+                    continue;
+                }
+
+                candidateTentative = tentativeDistance.get(u) + vDistance;
+                if (candidateTentative < tentativeDistance.get(v)) {
+                    tentativeDistance.replace(v, candidateTentative);
+                    previous.replace(v, u);
+                }
+
+            }
+        }
+
+        if (found == null) {
+            return null;
+        }
+
+        Coordinate x = found, y = null;
+        while (!x.equals(root)) {
+            y = x;
+            x = previous.get(y);
+        }
+        return y;
+    }
+    */
+
+    /**
+     * Gets this cool shit and finds da way
+     * @param root
+     * @param explored
+     */
+    public static Coordinate dijkstra(Coordinate root, HashMap<Coordinate, MapTile> explored, Coordinate destination) {
+        // Initialising the best distances map
+        // As well as the previous map, will be used to trace back the route later
+        HashMap<Coordinate, Integer> tentativeDistance = new HashMap<>();
+        HashMap<Coordinate, Coordinate> previous = new HashMap<>();
+        for (Coordinate location : explored.keySet()) {
+            if (!isSameType(explored.get(location), new MapTile(MapTile.Type.WALL)) &&
+                    !isSameType(explored.get(location), new MapTile(MapTile.Type.EMPTY))) {
+                tentativeDistance.put(location, Integer.MAX_VALUE);
+                previous.put(location, null);
+            }
+        }
+        // Root node has distance 0
+        tentativeDistance.replace(root, 0);
+
+        HashSet<Coordinate> seen = new HashSet<>();
+        Coordinate found = null;
+        while (!tentativeDistance.isEmpty()) {
+            Coordinate u = getMin(tentativeDistance);
+            seen.add(u);
+            tentativeDistance.remove(u);
+            System.out.format("Uh: %s\n", explored.get(u).getType().toString());
+
+            // Found the closest objective
+            if (u.equals(destination)) {
+                found = u;
+                break;
+            }
+
+            // Add neighbours
+            Integer vDistance, candidateTentative;
+            for (Coordinate v : getNeighbours(u)) {
+                vDistance = 1;
                 if (seen.contains(v) || vDistance.equals(IMPASSABLE_WEIGHT)) {
                     continue;
                 }
