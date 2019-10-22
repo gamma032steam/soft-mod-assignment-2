@@ -70,6 +70,7 @@ public class Pather {
                 break;
             }
 
+            // Add neighbours
             Integer vDistance, candidateTentative;
             for (Coordinate v : getNeighbours(u)) {
                 vDistance = weighTile(explored.get(v), objective);
@@ -95,7 +96,7 @@ public class Pather {
             y = x;
             x = previous.get(y);
         }
-        return x;
+        return y;
     }
 
     /**
