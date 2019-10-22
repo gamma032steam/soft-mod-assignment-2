@@ -76,6 +76,11 @@ public class Pather {
         return closestCoordinate;
     }
 
+    public static Boolean canReach(Coordinate root, HashMap<Coordinate, MapTile> explored, Coordinate target) {
+        dijkstra(root, explored, target);
+        return (!distance.get(target).equals(Integer.MAX_VALUE))
+    }
+
     /**
      * Finds the shortest path to the target, moving only vertically or horizontally.
      * @param root Source location for the search
