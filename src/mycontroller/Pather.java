@@ -77,27 +77,25 @@ public class Pather {
                     continue;
                 }
 
-                candidateTentative = tentativeDistance.get(u) + vDistance
+                candidateTentative = tentativeDistance.get(u) + vDistance;
                 if (candidateTentative < tentativeDistance.get(v)) {
                     tentativeDistance.replace(v, candidateTentative);
                     previous.replace(v, u);
                 }
 
             }
-
-            if (found == null) {
-                return null;
-            }
-
-            Coordinate x = found, y = null;
-            while (!x.equals(root)) {
-                y = x;
-                x = previous.get(y);
-            }
-            return x;
         }
 
+        if (found == null) {
+            return null;
+        }
 
+        Coordinate x = found, y = null;
+        while (!x.equals(root)) {
+            y = x;
+            x = previous.get(y);
+        }
+        return x;
     }
 
     /**
@@ -112,6 +110,7 @@ public class Pather {
                 return entry.getKey();
             }
         }
+        return null;
     }
 
     /**
@@ -174,7 +173,7 @@ public class Pather {
             if (a.getType().equals(MapTile.Type.TRAP)) {
                 TrapTile aTrap = (TrapTile) a;
                 TrapTile bTrap = (TrapTile) b;
-                return aTrap.getTrap().equals(bTrap.getTrap())
+                return aTrap.getTrap().equals(bTrap.getTrap());
             } else {
                 return true;
             }
