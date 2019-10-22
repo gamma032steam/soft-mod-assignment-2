@@ -184,8 +184,10 @@ public class Pather {
         HashMap<Coordinate, Integer> distance = new HashMap<>();
         // Previous neighbour node
         HashMap<Coordinate, Coordinate> previous = new HashMap<>();
+        // Queue
+        HashMap<Coordinate, Integer> queue = new HashMap<>();
         // Unexplored nodes
-        ArrayList<Coordinate> unexplored = new ArrayList<>();
+        ArrayList<Coordinate> seen = new ArrayList<>();
 
         // Set all nodes to infinity distance and no parent
         for (Coordinate coordinate: explored.keySet()) {
@@ -194,24 +196,30 @@ public class Pather {
                 continue;
             }
             distance.put(coordinate, Integer.MAX_VALUE);
+            queue.put(coordinate, Integer.MAX_VALUE);
             previous.put(coordinate, null);
-            unexplored.add(coordinate);
         }
 
         // 'Find' the source cell
         distance.replace(root, 0);
+        queue.replace(root, 0);
         Coordinate finalNode = null;
 
-        while(!unexplored.isEmpty()) {
+        while(!queue.isEmpty()) {
             // Construct a hashmap with the distances of unexplored nodes
             // TODO: This is a bit inefficient
+
+            /*
             HashMap<Coordinate, Integer> unexploredDistances = new HashMap<>();
             for (Coordinate coordinate: unexplored) {
                 unexploredDistances.put(coordinate, distance.get(coordinate));
             }
+            */
+
             // Get the current node as the one with the smallest distance
-            Coordinate currentNode = getMin(unexploredDistances);
-            unexplored.remove(currentNode);
+            Coordinate currentNode = getMin(queue);
+
+            queue.remove(currentNode);
 
             // Never pick impossible tiles just because we can see them
             if (distance.get(currentNode) == Integer.MAX_VALUE) {
@@ -230,11 +238,7 @@ public class Pather {
             System.out.println(getNeighbours(currentNode).size());
             for (Coordinate neighbour: getNeighbours(currentNode)) {
                 // Not valid if we're not tracking the distance for this coordinate (can't see/drive on it)
-                if (!distance.containsKey(neighbour)) {
-                    continue;
-                }
-
-                if (!unexplored.contains(neighbour)) {
+                if (!queue.containsKey(neighbour)) {
                     continue;
                 }
 
@@ -244,6 +248,7 @@ public class Pather {
                 // Is this the better distance?
                 if (newDistance < distance.get(neighbour)) {
                     distance.put(neighbour, newDistance);
+                    queue.put(neighbour, newDistance);
                     previous.put(neighbour, currentNode);
                 }
             }
