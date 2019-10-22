@@ -78,7 +78,7 @@ public class Pather {
 
     public static Boolean canReach(Coordinate root, HashMap<Coordinate, MapTile> explored, Coordinate target) {
         dijkstra(root, explored, target);
-        return (!distance.get(target).equals(Integer.MAX_VALUE))
+        return (!distance.get(target).equals(Integer.MAX_VALUE));
     }
 
     /**
