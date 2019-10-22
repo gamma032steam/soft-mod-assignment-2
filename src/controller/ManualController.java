@@ -13,6 +13,7 @@ public class ManualController extends CarController {
 	}
 	
 	public void update(){
+		System.out.println(getSpeed() + "  " + getOrientation());
 		Set<Integer> parcels = Simulation.getParcels();
 		Simulation.resetParcels();
         for (int k : parcels){
