@@ -234,6 +234,10 @@ public class Pather {
                     continue;
                 }
 
+                if (!unexplored.contains(neighbour)) {
+                    continue;
+                }
+
                 // Distance is the distance to the current node plus one extra step
                 int newDistance = distance.get(currentNode) + 1;
 
@@ -258,6 +262,10 @@ public class Pather {
         }
 
         return curr;
+    }
+
+    private static Boolean canReach(Coordinate root, HashMap<Coordinate, MapTile> explored, Coordinate target) {
+        return !(dijkstra2(root, explored, target) == null);
     }
 
     /**
