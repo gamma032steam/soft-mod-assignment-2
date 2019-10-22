@@ -46,15 +46,18 @@ public class Pather {
      */
     public static void dijkstra(Coordinate root, HashMap<Coordinate, MapTile> explored, MapTile objective) {
         // Initialising the best distances map
+        // As well as the previous map, will be used to trace back the route later
         HashMap<Coordinate, Integer> tentativeDistance = new HashMap<>();
         HashMap<Coordinate, Coordinate> previous = new HashMap<>();
         for (Coordinate location : explored.keySet()) {
             tentativeDistance.put(location, Integer.MAX_VALUE);
             previous.put(location, null);
         }
+        // Root node has distance 0
         tentativeDistance.replace(root, 0);
 
         HashSet<Coordinate> seen = new HashSet<>();
+        // TODO probs this while loop condition is off
         while (!tentativeDistance.isEmpty()) {
             Coordinate u = getMin(tentativeDistance);
             seen.add(u);
@@ -62,17 +65,17 @@ public class Pather {
 
             Integer vDistance, candidateTentative;
             for (Coordinate v : getNeighbours(u)) {
-                if (!seen.contains(v)) {
-                    vDistance = weighTile(explored.get(v), objective);
-                    if (!vDistance.equals(IMPASSABLE_WEIGHT)) {
-                        candidateTentative = tentativeDistance.get(u) + vDistance
-                        if (candidateTentative < tentativeDistance.get(v)) {
-                            tentativeDistance.replace(v, candidateTentative);
-                            previous.replace(v, u);
-                        }
-
-                    }
+                vDistance = weighTile(explored.get(v), objective);
+                if (seen.contains(v) || vDistance.equals(IMPASSABLE_WEIGHT)) {
+                    continue;
                 }
+
+                candidateTentative = tentativeDistance.get(u) + vDistance
+                if (candidateTentative < tentativeDistance.get(v)) {
+                    tentativeDistance.replace(v, candidateTentative);
+                    previous.replace(v, u);
+                }
+
             }
 
             // TODO RETURN THE BOY
@@ -81,6 +84,11 @@ public class Pather {
 
     }
 
+    /**
+     * Returns the key of the hashmap with the smallest value (the first one only actually)
+     * @param map
+     * @return
+     */
     private static Coordinate getMin(HashMap<Coordinate, Integer> map) {
         Integer min = Collections.min(map.values());
         for (Map.Entry<Coordinate, Integer> entry : map.entrySet()) {
@@ -90,6 +98,11 @@ public class Pather {
         }
     }
 
+    /**
+     * Given a coordinate root, returns a set of its neighbours which are legal
+     * @param root
+     * @return
+     */
     private static HashSet<Coordinate> getNeighbours(Coordinate root) {
         HashSet<Coordinate> neighbours = new HashSet<>();
         for (int dx = -1; dx <= 1; dx += 2) {
@@ -123,6 +136,12 @@ public class Pather {
 
     }
 
+    /**
+     * Helper function for the weighTile function
+     * @param trap
+     * @param objective
+     * @return
+     */
     private static Integer weighTrap(TrapTile trap, MapTile objective) {
         // If objective is also a trap
         if (objective.getType().equals(MapTile.Type.TRAP)) {
