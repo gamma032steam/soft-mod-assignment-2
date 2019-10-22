@@ -31,7 +31,14 @@ public class MyAutoController extends CarController{
 			super(car);
 			explored = new HashMap<Coordinate, MapTile>();
 
-			testPath.add(new Coordinate(2, 3));
+			testPath.add(new Coordinate(3, 3));
+			testPath.add(new Coordinate(3, 4));
+			testPath.add(new Coordinate(3, 5));
+			testPath.add(new Coordinate(3, 6));
+			testPath.add(new Coordinate(3, 7));
+			testPath.add(new Coordinate(3, 6));
+			testPath.add(new Coordinate(3, 5));
+			testPath.add(new Coordinate(3, 4));
 			testPath.add(new Coordinate(2, 4));
 		}
 

@@ -6,8 +6,13 @@ import world.WorldSpatial;
 
 import java.security.InvalidAlgorithmParameterException;
 
+import static world.WorldSpatial.Direction.*;
+
 public class Driver {
     private CarController carController;
+    /** Keeps track of whether we are currently reversing */
+    boolean inReverse = false;
+    boolean turning = false;
 
     private enum RelativeDirection {
         AHEAD,
@@ -32,26 +37,46 @@ public class Driver {
     /** Turn based on a relative direction to the current car position */
     public void control(RelativeDirection relativeDirection) {
         System.out.println(relativeDirection);
+        float speed = carController.getSpeed();
+        System.out.print(speed + "   " + inReverse);
         switch (relativeDirection) {
             case LEFT :
-                if (carController.getSpeed() != 0) {
+                // Turn left if we have the speed
+                if (speed != 0) {
                     carController.turnLeft();
                 } else {
+                    // We're at the start. Begin by moving forwards.
                     carController.applyForwardAcceleration();
                 }
                 break;
             case RIGHT:
-                if (carController.getSpeed() != 0) {
+                // Turn right if we have the speed, otherwise back up and turn
+                if (speed != 0) {
                     carController.turnRight();
                 } else {
+                    // We're at the start. Begin by moving forwards.
                     carController.applyForwardAcceleration();
                 }
                 break;
             case AHEAD:
-                carController.applyForwardAcceleration();
+                // Go forward only if we are still or in reverse, to limit speed at 1
+                if (speed == 0) {
+                    carController.applyForwardAcceleration();
+                    // Switching out of reverse
+                    inReverse = false;
+                } else if (inReverse) {
+                    carController.applyForwardAcceleration();
+                }
                 break;
             case BEHIND:
-                carController.applyReverseAcceleration();
+                // Go backwards only if we are are still or going forwards
+                if (speed == 0) {
+                    carController.applyReverseAcceleration();
+                    // Switching into reverse
+                    inReverse = true;
+                } else if (!inReverse) {
+                    carController.applyReverseAcceleration();
+                }
                 break;
         }
     }
@@ -77,16 +102,16 @@ public class Driver {
         if (deltaX == 0) {
             // Above or below us
             if (deltaY > 0) {
-                return WorldSpatial.Direction.NORTH;
+                return NORTH;
             } else {
-                return WorldSpatial.Direction.SOUTH;
+                return SOUTH;
             }
         } else {
             // Left or right of us
             if (deltaX > 0) {
                 return WorldSpatial.Direction.EAST;
             } else {
-                return WorldSpatial.Direction.WEST;
+                return WEST;
             }
         }
     }
@@ -110,31 +135,31 @@ public class Driver {
 
     /** Returns the compass direction to the right (plus 90 degrees) */
     private WorldSpatial.Direction rightDirection(WorldSpatial.Direction direction) {
-        // TODO: Make this a switch
-        if (direction == WorldSpatial.Direction.NORTH) {
-            return WorldSpatial.Direction.EAST;
-        } else if (direction == WorldSpatial.Direction.EAST) {
-            return WorldSpatial.Direction.SOUTH;
-        } else if (direction == WorldSpatial.Direction.SOUTH) {
-            return WorldSpatial.Direction.WEST;
-        } else {
-            // West
-            return WorldSpatial.Direction.NORTH;
+        switch(direction) {
+            case NORTH:
+                return EAST;
+            case EAST:
+                return SOUTH;
+            case SOUTH:
+                return WEST;
+            default:
+                // West
+                return NORTH;
         }
     }
 
     /** Returns the opposite compass direction */
     private WorldSpatial.Direction oppositeDirection (WorldSpatial.Direction direction) {
-        // TODO: Make this a switch
-        if (direction == WorldSpatial.Direction.NORTH) {
-            return WorldSpatial.Direction.SOUTH;
-        } else if (direction == WorldSpatial.Direction.SOUTH) {
-            return WorldSpatial.Direction.NORTH;
-        } else if (direction == WorldSpatial.Direction.EAST) {
-            return WorldSpatial.Direction.WEST;
-        } else {
-            // West
-            return WorldSpatial.Direction.EAST;
+        switch(direction) {
+            case NORTH:
+                return SOUTH;
+            case SOUTH:
+                return NORTH;
+            case EAST:
+                return WEST;
+            default:
+                // WEST
+                return EAST;
         }
     }
 }
