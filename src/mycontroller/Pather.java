@@ -74,6 +74,8 @@ public class Pather {
                     }
                 }
             }
+
+            // TODO RETURN THE BOY
         }
 
 
@@ -131,59 +133,4 @@ public class Pather {
         }
         return DEFAULT_TRAP_WEIGHT.get(trap.getTrap());
     }
-
-    /*
-    private static ArrayList<Coordinate> getNeighbours(HashMap<Coordinate, MapTile> explored, Coordinate root, ) {
-        ArrayList<Coordinate> neighbours = new ArrayList<>();
-        Coordinate candidate;
-
-        candidate = new Coordinate(root.x + 1, root.y)
-        if (weighCoordinate(candidate)) neighbours.add(candidate);
-
-        candidate = new Coordinate(root.x - 1, root.y)
-        if (weighCoordinate(candidate)) neighbours.add(candidate);
-
-        candidate = new Coordinate(root.x, root.y + 1)
-        if (weighCoordinate(candidate)) neighbours.add(candidate);
-
-        candidate = new Coordinate(root.x, root.y - 1)
-        if (weighCoordinate(candidate)) neighbours.add(candidate);
-    }
-
-
-
-    private static Integer weighCoordinate(HashMap<Coordinate, MapTile> explored, Coordinate candidate) {
-        if (candidate.x >= 0 && candidate.x < World.MAP_WIDTH) {
-            if (candidate.y >= 0 && candidate.y < World.MAP_HEIGHT) {
-                MapTile tile = explored.get(candidate);
-
-            }
-        }
-    }
-
-    private static int weighTile(MapTile tile) {
-        if (tile.getType().equals(MapTile.Type.TRAP)) {
-            TrapTile trap = (TrapTile) tile;
-            switch (trap.getTrap()) {
-                case "lava":
-                    return 10000;
-                case "mud":
-                    return -1;
-                case "water":
-                    return 1;
-                case "parcel":
-                    return Integer.MIN_VALUE;
-            }
-        } else {
-            switch (tile.getType()) {
-                case WALL:
-                    return null;
-                case ROAD:
-                    return 1
-                case EXIT:
-
-            }
-        }
-    }
-    */
 }
