@@ -42,9 +42,8 @@ public class MyAutoController extends CarController{
 			explored.putAll(currentView);
 			//printMap(explored);
 			try {
-				driver.driveTowards(Pather.dijkstra(new Coordinate(getPosition()), explored, new ParcelTrap()));
-				// TODO: Give me the path
-				// driver.driveTowards(testPath.get(step));
+				Coordinate target = Pather.dijkstra(new Coordinate(getPosition()), explored, new ParcelTrap());
+				driver.driveTowards(target);
 			} catch (Exception e) {
 				e.printStackTrace();
 				applyForwardAcceleration();
