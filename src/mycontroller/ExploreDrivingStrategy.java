@@ -4,7 +4,7 @@ import controller.CarController;
 import tiles.MapTile;
 import utilities.Coordinate;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class ExploreDrivingStrategy extends DrivingStrategy {
 
@@ -15,6 +15,16 @@ public class ExploreDrivingStrategy extends DrivingStrategy {
 
     @Override
     public Coordinate getNextMove(HashMap<Coordinate, MapTile> explored, CarController controller) {
-        return null;
+        ArrayList<Coordinate> unexploredCoords = new ArrayList<>();
+        for (Coordinate coord : controller.getMap().keySet()) {
+            unexploredCoords.add(coord);
+        }
+
+        for (Coordinate coord : explored.keySet()) {
+            unexploredCoords.remove(coord);
+        }
+
+        Coordinate nearestUnexplored = Pather.getNearest(new Coordinate(controller.getPosition()), controller.getMap(), unexploredCoords);
+        return nearestUnexplored;
     }
 }

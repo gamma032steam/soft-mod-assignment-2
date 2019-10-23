@@ -39,6 +39,7 @@ public class MyAutoController extends CarController{
 			map = World.getMap();
 			strategy.addStrategy(new ParcelDrivingStrategy());
 			strategy.addStrategy(new ExitDrivingStrategy());
+			strategy.addStrategy(new ExploreDrivingStrategy());
 		}
 
 		@Override
