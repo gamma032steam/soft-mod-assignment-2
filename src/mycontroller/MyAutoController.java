@@ -12,8 +12,6 @@ import world.WorldSpatial;
 
 public class MyAutoController extends CarController{
 
-		private HashMap<Coordinate, MapTile> map;
-
 		/** Tiles of the map discovered so far */
 		private HashMap<Coordinate, MapTile> exploredMap;
 
@@ -23,8 +21,6 @@ public class MyAutoController extends CarController{
 			super(car);
 			// What we have seen in our 9x9 vision
 			exploredMap = new HashMap<Coordinate, MapTile>();
-			// All roads and tiles
-			map = World.getMap();
 			strategy.addStrategy(new ParcelDrivingStrategy());
 			strategy.addStrategy(new ExitDrivingStrategy());
 			strategy.addStrategy(new ExploreDrivingStrategy());
@@ -37,10 +33,8 @@ public class MyAutoController extends CarController{
 
 			// Adds what is seen to the new explored hashmap
 			exploredMap.putAll(currentView);
-			// And note that we have seen the tile
 			
 
-			//printMap(explored);
 			try {
 				// TODO: Can just make a get exploredMap in the controller, so you don't have to pass it in
 				Coordinate target = strategy.getNextMove(exploredMap, this);
