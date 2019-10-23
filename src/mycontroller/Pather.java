@@ -22,6 +22,11 @@ public class Pather {
     public static Coordinate getNextMove(Coordinate root, HashMap<Coordinate, MapTile> explored, Coordinate target) {
         dijkstra(root, explored, target);
 
+        // We are already there
+        if (root.equals(target)) {
+            return root;
+        }
+
         // Target was not reached
         if (distance.get(target).equals(Integer.MAX_VALUE)) {
             return null;

@@ -26,9 +26,6 @@ public class MyAutoController extends CarController{
 		/** If we have seen a coordinate */
 		private HashMap<Coordinate, Boolean> seenMap;
 
-		/** Drives the car on behalf of the controller */
-		Driver driver = new Driver(this);
-
 		CompositeDrivingStrategy strategy = new CompositeDrivingStrategy();
 
 		public MyAutoController(Car car) {
@@ -62,6 +59,11 @@ public class MyAutoController extends CarController{
 				driver.driveTowards(target);
 			} catch (Exception e) {
 				e.printStackTrace();
+				// Back up
+				applyReverseAcceleration();
+				if (getSpeed() == 0) {
+					Driver.setInReverse(true);
+				}
 			}
 		}
 
