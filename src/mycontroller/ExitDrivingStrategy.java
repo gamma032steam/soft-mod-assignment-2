@@ -30,8 +30,13 @@ public class ExitDrivingStrategy extends DrivingStrategy {
     }
 
     @Override
-    public void doRule(HashMap<Coordinate, MapTile> explored, CarController controller) {
+    public Coordinate getNextMove(HashMap<Coordinate, MapTile> explored, CarController controller) {
+        Map<Coordinate, MapTile> exits = filterVisible(explored, MapTile.Type.FINISH);
+        ArrayList<Coordinate> exitCoords = new ArrayList<Coordinate>(exits.keySet());
+        Coordinate currentPosition = new Coordinate(controller.getPosition());
 
+        Coordinate nearestExit = Pather.getNearest(currentPosition, explored, exitCoords);
+        return Pather.getNextMove(currentPosition, explored, nearestExit);
     }
 
 }
