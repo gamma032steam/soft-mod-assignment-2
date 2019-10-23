@@ -82,11 +82,18 @@ public class Pather {
         Integer closestCoordinateDistance = Integer.MAX_VALUE;
         for (Coordinate target : targets) {
             dijkstra(root, explored, target);
+            if (distance.get(target) == null) {
+                System.out.println("issue");
+                continue;
+            } else {
+                System.out.println("considered" + closestCoordinate);
+            }
             if (distance.get(target) < closestCoordinateDistance) {
                 closestCoordinate = target;
                 closestCoordinateDistance = distance.get(target);
             }
         }
+        System.out.println(closestCoordinate);
         return closestCoordinate;
     }
 
@@ -152,7 +159,6 @@ public class Pather {
             }
 
             // Get the neighbours
-            System.out.println(getNeighbours(currentNode).size());
             for (Coordinate neighbour: getNeighbours(currentNode)) {
                 // This is a node we've already processed so we shouldn't process it again
                 if (!queue.containsKey(neighbour)) {
@@ -182,7 +188,7 @@ public class Pather {
      * @return True if a car could drive on this tile, False otherwise
      */
     // TODO make this more comprehensive to not drive over mud
-    private static Boolean isTraversable(MapTile tile) {
+    public static Boolean isTraversable(MapTile tile) {
         return !isSameType(tile, new MapTile(MapTile.Type.WALL)) &&
                !isSameType(tile, new MapTile(MapTile.Type.EMPTY ));
     }

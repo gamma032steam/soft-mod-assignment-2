@@ -17,6 +17,9 @@ public class ExploreDrivingStrategy extends DrivingStrategy {
     public Coordinate getNextMove(HashMap<Coordinate, MapTile> explored, CarController controller) {
         ArrayList<Coordinate> unexploredCoords = new ArrayList<>();
         for (Coordinate coord : controller.getMap().keySet()) {
+            if (!Pather.isTraversable(controller.getMap().get(coord))) {
+                continue;
+            }
             unexploredCoords.add(coord);
         }
 
