@@ -10,6 +10,9 @@ import java.util.stream.Collectors;
 
 public class Pather {
 
+    private static HashMap<Coordinate, Integer> distance;
+    private static HashMap<Coordinate, Coordinate> previous;
+
     private static Integer SMALL_WEIGHT = -1000;
     private static Integer AVOID_WEIGHT = 1000;
     private static Integer IMPASSABLE_WEIGHT = null;
@@ -42,134 +45,61 @@ public class Pather {
         return defaultNonTrapWeight;
     }
 
-    /*
-    public static Coordinate dijkstra(Coordinate root, HashMap<Coordinate, MapTile> explored, MapTile objective) {
-        // Initialising the best distances map
-        // As well as the previous map, will be used to trace back the route later
-        HashMap<Coordinate, Integer> tentativeDistance = new HashMap<>();
-        HashMap<Coordinate, Coordinate> previous = new HashMap<>();
-        for (Coordinate location : explored.keySet()) {
-            if (!isSameType(explored.get(location), new MapTile(MapTile.Type.WALL)) &&
-                !isSameType(explored.get(location), new MapTile(MapTile.Type.EMPTY))) {
-                System.out.println("Test");
-                tentativeDistance.put(location, Integer.MAX_VALUE);
-                previous.put(location, null);
-            }
-        }
-        // Root node has distance 0
-        tentativeDistance.replace(root, 0);
-
-        HashSet<Coordinate> seen = new HashSet<>();
-        Coordinate found = null;
-        while (!tentativeDistance.isEmpty()) {
-            Coordinate u = getMin(tentativeDistance);
-            seen.add(u);
-            tentativeDistance.remove(u);
-            System.out.format("Uh: %s\n", explored.get(u).getType().toString());
-
-            // Found the closest objective
-            if (isSameType(explored.get(u), objective)) {
-                found = u;
-                break;
-            }
-
-            // Add neighbours
-            Integer vDistance, candidateTentative;
-            for (Coordinate v : getNeighbours(u)) {
-                vDistance = weighTile(explored.get(v), objective);
-                if (seen.contains(v) || vDistance.equals(IMPASSABLE_WEIGHT)) {
-                    continue;
-                }
-
-                candidateTentative = tentativeDistance.get(u) + vDistance;
-                if (candidateTentative < tentativeDistance.get(v)) {
-                    tentativeDistance.replace(v, candidateTentative);
-                    previous.replace(v, u);
-                }
-
-            }
-        }
-
-        if (found == null) {
-            return null;
-        }
-
-        Coordinate x = found, y = null;
-        while (!x.equals(root)) {
-            y = x;
-            x = previous.get(y);
-        }
-        return y;
-    }
-    */
-
     /**
-     * Gets this cool shit and finds da way
+     * returns the move that will get you to the target the fastest, null if unreachable
      * @param root
      * @param explored
+     * @param target
+     * @return
      */
-    public static Coordinate dijkstra(Coordinate root, HashMap<Coordinate, MapTile> explored, Coordinate destination) {
-        // Initialising the best distances map
-        // As well as the previous map, will be used to trace back the route later
-        HashMap<Coordinate, Integer> tentativeDistance = new HashMap<>();
-        HashMap<Coordinate, Coordinate> previous = new HashMap<>();
-        for (Coordinate location : explored.keySet()) {
-            if (!isSameType(explored.get(location), new MapTile(MapTile.Type.WALL)) &&
-                    !isSameType(explored.get(location), new MapTile(MapTile.Type.EMPTY))) {
-                tentativeDistance.put(location, Integer.MAX_VALUE);
-                previous.put(location, null);
-            }
-        }
-        // Root node has distance 0
-        tentativeDistance.replace(root, 0);
+    public static Coordinate getNextMove(Coordinate root, HashMap<Coordinate, MapTile> explored, Coordinate target) {
+        dijkstra(root, explored, target);
 
-        HashSet<Coordinate> seen = new HashSet<>();
-        Coordinate found = null;
-        while (!tentativeDistance.isEmpty()) {
-            Coordinate u = getMin(tentativeDistance);
-            System.out.println("Min:" + u);
-            seen.add(u);
-            tentativeDistance.remove(u);
-            //System.out.format("Uh: %s\n", explored.get(u).getType().toString());
-
-            // Found the closest objective
-            if (u.equals(destination)) {
-                found = u;
-                break;
-            }
-
-            // Add neighbours
-            Integer vDistance, candidateTentative;
-            for (Coordinate v : getNeighbours(u)) {
-                vDistance = 1;
-                if (seen.contains(v) || vDistance.equals(IMPASSABLE_WEIGHT)) {
-                    continue;
-                }
-
-                candidateTentative = tentativeDistance.get(u) + vDistance;
-                if (candidateTentative < tentativeDistance.get(v)) {
-                    // New shortest path
-                    tentativeDistance.replace(v, candidateTentative);
-                    previous.replace(v, u);
-                    System.out.println(v + "  " + u);
-                }
-
-            }
-        }
-
-        if (found == null) {
+        // Target was not reached
+        if (distance.get(target).equals(Integer.MAX_VALUE)) {
             return null;
         }
 
-        Coordinate x = found, y = null;
-        while (!x.equals(root)) {
-            y = x;
-            System.out.println(y);
-            x = previous.get(y);
-            System.out.println(x);
+        // Otherwise get the next boi
+        Coordinate curr = target, next = previous.get(curr);
+        while(!next.equals(root) || root == null) {
+            curr = next;
+            next = previous.get(next);
         }
 
-        return y;
+        return curr;
+    }
+
+    /**
+     * returns coordinate that is closest, null if all are unreachable.
+     * @param root
+     * @param explored
+     * @param targets
+     * @return
+     */
+    public static Coordinate getNearest(Coordinate root, HashMap<Coordinate, MapTile> explored, Coordinate[] targets) {
+        Coordinate closestCoordinate = null;
+        Integer closestCoordinateDistance = Integer.MAX_VALUE;
+        for (Coordinate target : targets) {
+            dijkstra(root, explored, target);
+            if (distance.get(target) < closestCoordinateDistance) {
+                closestCoordinate = target;
+                closestCoordinateDistance = distance.get(target);
+            }
+        }
+        return closestCoordinate;
+    }
+
+    /**
+     * returns a boolean of whether the target is reachable
+     * @param root
+     * @param explored
+     * @param target
+     * @return
+     */
+    public static Boolean canReach(Coordinate root, HashMap<Coordinate, MapTile> explored, Coordinate target) {
+        dijkstra(root, explored, target);
+        return (!distance.get(target).equals(Integer.MAX_VALUE));
     }
 
     /**
@@ -179,13 +109,13 @@ public class Pather {
      * @param target Destination for the search
      * @return The first coordinate in the path from the root. Null if the target was unreachable.
      */
-    public static Coordinate dijkstra2(Coordinate root, HashMap<Coordinate, MapTile> explored, Coordinate target) {
+    private static void dijkstra(Coordinate root, HashMap<Coordinate, MapTile> explored, Coordinate target) {
         // Distance to a node
         HashMap<Coordinate, Integer> distance = new HashMap<>();
         // Previous neighbour node
         HashMap<Coordinate, Coordinate> previous = new HashMap<>();
-        // Unexplored nodes
-        ArrayList<Coordinate> unexplored = new ArrayList<>();
+        // Queue
+        HashMap<Coordinate, Integer> queue = new HashMap<>();
 
         // Set all nodes to infinity distance and no parent
         for (Coordinate coordinate: explored.keySet()) {
@@ -194,29 +124,24 @@ public class Pather {
                 continue;
             }
             distance.put(coordinate, Integer.MAX_VALUE);
+            queue.put(coordinate, Integer.MAX_VALUE);
             previous.put(coordinate, null);
-            unexplored.add(coordinate);
         }
 
         // 'Find' the source cell
         distance.replace(root, 0);
+        queue.replace(root, 0);
         Coordinate finalNode = null;
 
-        while(!unexplored.isEmpty()) {
-            // Construct a hashmap with the distances of unexplored nodes
-            // TODO: This is a bit inefficient
-            HashMap<Coordinate, Integer> unexploredDistances = new HashMap<>();
-            for (Coordinate coordinate: unexplored) {
-                unexploredDistances.put(coordinate, distance.get(coordinate));
-            }
-            // Get the current node as the one with the smallest distance
-            Coordinate currentNode = getMin(unexploredDistances);
-            unexplored.remove(currentNode);
+        while(!queue.isEmpty()) {
+            // Get the current node as the one with the smallest distance that has not been visited already
+            Coordinate currentNode = getMin(queue);
+            queue.remove(currentNode);
 
             // Never pick impossible tiles just because we can see them
             if (distance.get(currentNode) == Integer.MAX_VALUE) {
                 // Return null for safety
-                return null;
+                return;
             }
 
             // See if we reached the goal
@@ -229,12 +154,8 @@ public class Pather {
             // Get the neighbours
             System.out.println(getNeighbours(currentNode).size());
             for (Coordinate neighbour: getNeighbours(currentNode)) {
-                // Not valid if we're not tracking the distance for this coordinate (can't see/drive on it)
-                if (!distance.containsKey(neighbour)) {
-                    continue;
-                }
-
-                if (!unexplored.contains(neighbour)) {
+                // This is a node we've already processed so we shouldn't process it again
+                if (!queue.containsKey(neighbour)) {
                     continue;
                 }
 
@@ -244,28 +165,14 @@ public class Pather {
                 // Is this the better distance?
                 if (newDistance < distance.get(neighbour)) {
                     distance.put(neighbour, newDistance);
+                    queue.put(neighbour, newDistance);
                     previous.put(neighbour, currentNode);
                 }
             }
         }
 
-        // Did we find it? If not, return null for safety
-        if (finalNode == null) {
-            return null;
-        }
-
-        // Backtrack to the node before the root
-        Coordinate curr = finalNode, next = previous.get(curr);
-        while(!next.equals(root)) {
-            curr = next;
-            next = previous.get(next);
-        }
-
-        return curr;
-    }
-
-    private static Boolean canReach(Coordinate root, HashMap<Coordinate, MapTile> explored, Coordinate target) {
-        return !(dijkstra2(root, explored, target) == null);
+        Pather.distance = distance;
+        Pather.previous = previous;
     }
 
     /**
