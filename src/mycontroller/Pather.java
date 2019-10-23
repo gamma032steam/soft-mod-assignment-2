@@ -77,7 +77,7 @@ public class Pather {
      * @param targets
      * @return
      */
-    public static Coordinate getNearest(Coordinate root, HashMap<Coordinate, MapTile> explored, Coordinate[] targets) {
+    public static Coordinate getNearest(Coordinate root, HashMap<Coordinate, MapTile> explored, ArrayList<Coordinate> targets) {
         Coordinate closestCoordinate = null;
         Integer closestCoordinateDistance = Integer.MAX_VALUE;
         for (Coordinate target : targets) {
