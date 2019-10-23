@@ -91,7 +91,7 @@ public class Driver {
         if (destination == null || source == null) {
             throw new InvalidAlgorithmParameterException("Source or destination was null!");
         }
-
+      
         // Check that the destination is not diagonally away from us
         if (deltaX != 0 && deltaY != 0) {
             throw new InvalidAlgorithmParameterException("Driver instructed to move diagonally, deltaX = " + deltaX +" deltaY =" + deltaY);

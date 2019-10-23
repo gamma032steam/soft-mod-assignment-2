@@ -1,16 +1,13 @@
 package mycontroller;
 
 import controller.CarController;
-import tiles.ParcelTrap;
 import world.Car;
-import world.World;
 
-import java.security.InvalidAlgorithmParameterException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import tiles.MapTile;
 import utilities.Coordinate;
+import world.World;
 import world.WorldSpatial;
 
 public class MyAutoController extends CarController{		
@@ -23,11 +20,23 @@ public class MyAutoController extends CarController{
 		private final int CAR_MAX_SPEED = 1;
 
 		/** Tiles of the map discovered so far */
-		private HashMap<Coordinate, MapTile> explored;
+		private HashMap<Coordinate, MapTile> exploredMap;
+		/** Whole map */
+		private HashMap<Coordinate, MapTile> map;
+		/** If we have seen a coordinate */
+		private HashMap<Coordinate, Boolean> seenMap;
+
+		CompositeDrivingStrategy strategy = new CompositeDrivingStrategy();
 
 		public MyAutoController(Car car) {
 			super(car);
-			explored = new HashMap<Coordinate, MapTile>();
+			// What we have seen in our 9x9 vision
+			exploredMap = new HashMap<Coordinate, MapTile>();
+			// All roads and tiles
+			map = World.getMap();
+			strategy.addStrategy(new ParcelDrivingStrategy());
+			strategy.addStrategy(new ExitDrivingStrategy());
+			strategy.addStrategy(new ExploreDrivingStrategy());
 		}
 
 		@Override
@@ -36,11 +45,18 @@ public class MyAutoController extends CarController{
 			HashMap<Coordinate, MapTile> currentView = getView();
 
 			// Adds what is seen to the new explored hashmap
-			explored.putAll(currentView);
+			exploredMap.putAll(currentView);
+			// And note that we have seen the tile
+			
+
 			//printMap(explored);
 			try {
-				Coordinate target = Pather.getNextMove(new Coordinate(getPosition()), explored, new Coordinate(4, 5));
-				Driver.driveTowards(target, this);
+				// TODO: Can just make a get exploredMap in the controller, so you don't have to pass it in
+				Coordinate target = strategy.getNextMove(exploredMap, this);
+				if (target == null) {
+					return;
+				}
+				driver.driveTowards(target);
 			} catch (Exception e) {
 				e.printStackTrace();
 				// Back up
@@ -165,5 +181,11 @@ public class MyAutoController extends CarController{
 				System.out.println();
 			}
 		}
-		
+
+	//TODO: Update this once the pather is implemented
+	public boolean isPathTo(Coordinate coordinate) {
+		return true;
+
+
 	}
+}
