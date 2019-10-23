@@ -1,6 +1,7 @@
 package mycontroller;
 
 import controller.CarController;
+import tiles.ParcelTrap;
 import world.Car;
 import world.World;
 
@@ -40,13 +41,11 @@ public class MyAutoController extends CarController{
 			// Adds what is seen to the new explored hashmap
 			explored.putAll(currentView);
 			//printMap(explored);
-
 			try {
-				// TODO: Give me the path
-				// driver.driveTowards(testPath.get(step));
+				Coordinate target = Pather.getNextMove(new Coordinate(getPosition()), explored, new Coordinate(4, 5));
+				driver.driveTowards(target);
 			} catch (Exception e) {
 				e.printStackTrace();
-				applyForwardAcceleration();
 			}
 		}
 
