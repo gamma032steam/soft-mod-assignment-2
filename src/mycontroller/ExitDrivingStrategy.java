@@ -1,5 +1,6 @@
 package mycontroller;
 
+import controller.CarController;
 import tiles.MapTile;
 import utilities.Coordinate;
 
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 public class ExitDrivingStrategy extends DrivingStrategy {
 
     @Override
-    public boolean isApplicable(HashMap<Coordinate, MapTile> explored, MyAutoController controller) {
+    public boolean isApplicable(HashMap<Coordinate, MapTile> explored, CarController controller) {
         if (controller.numParcelsFound() < controller.numParcels()) {
             return false;
         }
@@ -31,7 +32,7 @@ public class ExitDrivingStrategy extends DrivingStrategy {
     }
 
     @Override
-    public void doRule(HashMap<Coordinate, MapTile> explored, MyAutoController controller) {
+    public void doRule(HashMap<Coordinate, MapTile> explored, CarController controller) {
 
     }
 
