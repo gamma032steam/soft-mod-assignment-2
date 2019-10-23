@@ -164,5 +164,11 @@ public class MyAutoController extends CarController{
 				System.out.println();
 			}
 		}
-		
+
+	//TODO: Update this once the pather is implemented
+	public boolean isPathTo(Coordinate coordinate) {
+		return true;
+
+
 	}
+}
