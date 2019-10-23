@@ -15,12 +15,12 @@ abstract public class DrivingStrategy {
     /**
      * Filters the map for tiles which of type "type"
      * @param explored HashMap representation of the visible map
-     * @param type MapTile type desired
+     * @param type MapTile instance of MapTile which the same as desired type
      * @return The filtered hashmap
      */
-    protected Map<Coordinate, MapTile> filterVisible(HashMap<Coordinate, MapTile> explored, MapTile.Type type) {
+    protected Map<Coordinate, MapTile> filterVisible(HashMap<Coordinate, MapTile> explored, MapTile type) {
         Map<Coordinate, MapTile> tiles = explored.entrySet().stream()
-                .filter(entry -> entry.getValue().getType().equals(type))
+                .filter(entry -> Pather.isSameType(entry.getValue(), type))
                 .collect(Collectors.toMap(x->x.getKey(), x->x.getValue()));
         return tiles;
     }

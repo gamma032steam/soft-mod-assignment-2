@@ -18,7 +18,7 @@ public class ExitDrivingStrategy extends DrivingStrategy {
         }
 
         // Get hashmap with only exit tiles
-        Map<Coordinate, MapTile> exits = filterVisible(explored, MapTile.Type.FINISH);
+        Map<Coordinate, MapTile> exits = filterVisible(explored, new MapTile(MapTile.Type.FINISH));
 
         for (Coordinate location : exits.keySet()) {
             if ((Pather.canReach(new Coordinate(controller.getPosition()), explored, location))) {
@@ -31,7 +31,7 @@ public class ExitDrivingStrategy extends DrivingStrategy {
 
     @Override
     public Coordinate getNextMove(HashMap<Coordinate, MapTile> explored, CarController controller) {
-        Map<Coordinate, MapTile> exits = filterVisible(explored, MapTile.Type.FINISH);
+        Map<Coordinate, MapTile> exits = filterVisible(explored, new MapTile(MapTile.Type.FINISH));
         ArrayList<Coordinate> exitCoords = new ArrayList<Coordinate>(exits.keySet());
         Coordinate currentPosition = new Coordinate(controller.getPosition());
 

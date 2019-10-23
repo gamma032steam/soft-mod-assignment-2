@@ -258,7 +258,7 @@ public class Pather {
         return DEFAULT_TRAP_WEIGHT.get(trap.getTrap());
     }
 
-    private static boolean isSameType(MapTile a, MapTile b) {
+    public static boolean isSameType(MapTile a, MapTile b) {
         if (a.getType().equals(b.getType())) {
             if (a.getType().equals(MapTile.Type.TRAP)) {
                 TrapTile aTrap = (TrapTile) a;
