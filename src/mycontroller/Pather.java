@@ -185,17 +185,17 @@ public class Pather {
      * @param explored
      * @return
      */
-    private static Coordinate findNearestUnexplored(Coordinate root, HashMap<Coordinate, MapTile> explored) {
+    public static Coordinate findNearestUnexplored(Coordinate root, HashMap<Coordinate, MapTile> explored, HashMap<Coordinate, MapTile> world) {
         ArrayList<Coordinate> queue = new ArrayList<>();
         queue.add(root);
-        while (true) {
+        while (!queue.isEmpty()) {
             Coordinate currentNode = queue.remove(0);
             if (!explored.containsKey(currentNode)) {
                 return currentNode;
             }
 
             for (Coordinate neighbour : getNeighbours(currentNode)) {
-                if (isTraversable(neighbour)) {
+                if (isTraversable(world.get(neighbour))) {
                     queue.add(neighbour);
                 }
             }
