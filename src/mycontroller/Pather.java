@@ -198,7 +198,7 @@ public class Pather {
             }
 
             for (Coordinate neighbour : getNeighbours(currentNode)) {
-                if (isTraversable(world.get(neighbour)) && !seen.contains(neighbour)) {
+                if (isTraversable(world.get(neighbour)) && !seen.contains(neighbour) && !queue.contains(neighbour)) {
                     queue.add(neighbour);
                 }
             }
