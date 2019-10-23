@@ -6,44 +6,11 @@ import utilities.Coordinate;
 import world.World;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Pather {
 
     private static HashMap<Coordinate, Integer> distance;
     private static HashMap<Coordinate, Coordinate> previous;
-
-    private static Integer SMALL_WEIGHT = -1000;
-    private static Integer AVOID_WEIGHT = 1000;
-    private static Integer IMPASSABLE_WEIGHT = null;
-    private static Integer DEFAULT_WEIGHT = 1;
-
-    private static HashMap<String, Integer> DEFAULT_TRAP_WEIGHT = defaultTrapWeightInitialiser();
-
-    private static HashMap<String, Integer> defaultTrapWeightInitialiser() {
-        HashMap<String, Integer> defaultTrapWeight = new HashMap<String, Integer>();
-        defaultTrapWeight.put("lava", AVOID_WEIGHT);
-        defaultTrapWeight.put("parcel", DEFAULT_WEIGHT);
-        defaultTrapWeight.put("mud", IMPASSABLE_WEIGHT);
-        defaultTrapWeight.put("water", DEFAULT_WEIGHT);
-        defaultTrapWeight.put("health", DEFAULT_WEIGHT);
-        defaultTrapWeight.put("grass", AVOID_WEIGHT);
-        return defaultTrapWeight;
-    }
-
-    private static HashMap<MapTile.Type, Integer> DEFAULT_NON_TRAP_WEIGHT = defaultNonTrapWeightInitialiser();
-
-    private static HashMap<MapTile.Type, Integer> defaultNonTrapWeightInitialiser() {
-        HashMap<MapTile.Type, Integer> defaultNonTrapWeight = new HashMap<MapTile.Type, Integer>();
-        defaultNonTrapWeight.put(MapTile.Type.WALL, IMPASSABLE_WEIGHT);
-        defaultNonTrapWeight.put(MapTile.Type.UTILITY, DEFAULT_WEIGHT);
-        defaultNonTrapWeight.put(MapTile.Type.START, DEFAULT_WEIGHT);
-        defaultNonTrapWeight.put(MapTile.Type.FINISH, DEFAULT_WEIGHT);
-        defaultNonTrapWeight.put(MapTile.Type.ROAD, DEFAULT_WEIGHT);
-        defaultNonTrapWeight.put(MapTile.Type.EMPTY, IMPASSABLE_WEIGHT);
-        defaultNonTrapWeight.put(MapTile.Type.TRAP, DEFAULT_WEIGHT); // Shouldn't happen
-        return defaultNonTrapWeight;
-    }
 
     /**
      * returns the move that will get you to the target the fastest, null if unreachable
@@ -263,34 +230,12 @@ public class Pather {
         return false;
     }
 
-    private static Integer weighTile(MapTile tile, MapTile objective) {
-        if (tile.getType().equals(MapTile.Type.TRAP)) {
-            return weighTrap((TrapTile) tile, objective);
-        } else if (tile.getType().equals(objective.getType())) {
-            return SMALL_WEIGHT;
-        } else {
-            return DEFAULT_NON_TRAP_WEIGHT.get(tile.getType());
-        }
-
-    }
-
     /**
-     * Helper function for the weighTile function
-     * @param trap
-     * @param objective
+     * determines if two tiles are the same type
+     * @param a
+     * @param b
      * @return
      */
-    private static Integer weighTrap(TrapTile trap, MapTile objective) {
-        // If objective is also a trap
-        if (objective.getType().equals(MapTile.Type.TRAP)) {
-            TrapTile objectiveTrap = (TrapTile) objective;
-            if (trap.getTrap().equals(objectiveTrap.getTrap())) {
-                return SMALL_WEIGHT;
-            }
-        }
-        return DEFAULT_TRAP_WEIGHT.get(trap.getTrap());
-    }
-
     public static boolean isSameType(MapTile a, MapTile b) {
         if (a.getType().equals(b.getType())) {
             if (a.getType().equals(MapTile.Type.TRAP)) {
