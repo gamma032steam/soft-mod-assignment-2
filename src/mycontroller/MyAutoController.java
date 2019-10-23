@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import tiles.MapTile;
 import utilities.Coordinate;
+import world.World;
 import world.WorldSpatial;
 
 public class MyAutoController extends CarController{		
@@ -19,7 +20,11 @@ public class MyAutoController extends CarController{
 		private final int CAR_MAX_SPEED = 1;
 
 		/** Tiles of the map discovered so far */
-		private HashMap<Coordinate, MapTile> explored;
+		private HashMap<Coordinate, MapTile> exploredMap;
+		/** Whole map */
+		private HashMap<Coordinate, MapTile> map;
+		/** If we have seen a coordinate */
+		private HashMap<Coordinate, Boolean> seenMap;
 
 		/** Drives the car on behalf of the controller */
 		Driver driver = new Driver(this);
@@ -28,7 +33,10 @@ public class MyAutoController extends CarController{
 
 		public MyAutoController(Car car) {
 			super(car);
-			explored = new HashMap<Coordinate, MapTile>();
+			// What we have seen in our 9x9 vision
+			exploredMap = new HashMap<Coordinate, MapTile>();
+			// All roads and tiles
+			map = World.getMap();
 			strategy.addStrategy(new ParcelDrivingStrategy());
 			strategy.addStrategy(new ExitDrivingStrategy());
 		}
@@ -39,10 +47,14 @@ public class MyAutoController extends CarController{
 			HashMap<Coordinate, MapTile> currentView = getView();
 
 			// Adds what is seen to the new explored hashmap
-			explored.putAll(currentView);
+			exploredMap.putAll(currentView);
+			// And note that we have seen the tile
+			
+
 			//printMap(explored);
 			try {
-				Coordinate target = strategy.getNextMove(explored, this);
+				// TODO: Can just make a get exploredMap in the controller, so you don't have to pass it in
+				Coordinate target = strategy.getNextMove(exploredMap, this);
 				driver.driveTowards(target);
 			} catch (Exception e) {
 				e.printStackTrace();
