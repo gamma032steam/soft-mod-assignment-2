@@ -32,7 +32,7 @@ public class CompositeDrivingStrategy extends DrivingStrategy {
                 System.out.format("Applying Strategy %s\n", strategy.getClass().getName());
                 Coordinate nextMove = strategy.getNextMove(explored, controller);
                 if (nextMove == null) {
-                    throw new Exception("Error: Applicable strategy returned null!");
+                    return null;
                 }
 
                 return nextMove;
