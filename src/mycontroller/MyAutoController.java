@@ -26,7 +26,7 @@ public class MyAutoController extends CarController{
 		/** If we have seen a coordinate */
 		private HashMap<Coordinate, Boolean> seenMap;
 
-		CompositeDrivingStrategy strategy = new CompositeDrivingStrategy();
+		private CompositeDrivingStrategy strategy = new CompositeDrivingStrategy();
 
 		public MyAutoController(Car car) {
 			super(car);
@@ -56,7 +56,7 @@ public class MyAutoController extends CarController{
 				if (target == null) {
 					return;
 				}
-				driver.driveTowards(target);
+				Driver.driveTowards(target, this);
 			} catch (Exception e) {
 				e.printStackTrace();
 				// Back up
