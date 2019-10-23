@@ -29,6 +29,7 @@ public class CompositeDrivingStrategy extends DrivingStrategy {
     public Coordinate getNextMove(HashMap<Coordinate, MapTile> explored, CarController controller) throws Exception {
         for (DrivingStrategy strategy : strategies) {
             if (strategy.isApplicable(explored, controller)) {
+                System.out.format("Applying Strategy %s\n", strategy.getClass().getName());
                 Coordinate nextMove = strategy.getNextMove(explored, controller);
                 if (nextMove == null) {
                     throw new Exception("Error: Applicable strategy returned null!");

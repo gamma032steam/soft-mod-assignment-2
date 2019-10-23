@@ -28,6 +28,7 @@ public class ExploreDrivingStrategy extends DrivingStrategy {
         }
 
         Coordinate nearestUnexplored = Pather.getNearest(new Coordinate(controller.getPosition()), controller.getMap(), unexploredCoords);
-        return nearestUnexplored;
+        Coordinate nextMove = Pather.getNextMove(new Coordinate(controller.getPosition()), controller.getMap(), nearestUnexplored);
+        return nextMove;
     }
 }
