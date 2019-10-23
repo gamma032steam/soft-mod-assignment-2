@@ -83,17 +83,14 @@ public class Pather {
         for (Coordinate target : targets) {
             dijkstra(root, explored, target);
             if (distance.get(target) == null) {
-                System.out.println("issue");
                 continue;
             } else {
-                System.out.println("considered" + closestCoordinate);
             }
             if (distance.get(target) < closestCoordinateDistance) {
                 closestCoordinate = target;
                 closestCoordinateDistance = distance.get(target);
             }
         }
-        System.out.println(closestCoordinate);
         return closestCoordinate;
     }
 
