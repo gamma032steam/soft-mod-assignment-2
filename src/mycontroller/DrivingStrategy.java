@@ -20,7 +20,7 @@ abstract public class DrivingStrategy {
      */
     protected Map<Coordinate, MapTile> filterVisible(HashMap<Coordinate, MapTile> explored, MapTile type) {
         Map<Coordinate, MapTile> tiles = explored.entrySet().stream()
-                .filter(entry -> Pather.isSameType(entry.getValue(), type))
+                .filter(entry -> PathingUtilities.isSameType(entry.getValue(), type))
                 .collect(Collectors.toMap(x->x.getKey(), x->x.getValue()));
         return tiles;
     }

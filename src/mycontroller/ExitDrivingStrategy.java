@@ -8,7 +8,6 @@ import world.World;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ExitDrivingStrategy extends DrivingStrategy {
 
@@ -22,7 +21,7 @@ public class ExitDrivingStrategy extends DrivingStrategy {
         Map<Coordinate, MapTile> exits = filterVisible(explored, new MapTile(MapTile.Type.FINISH));
 
         for (Coordinate location : exits.keySet()) {
-            if ((Pather.canReach(new Coordinate(controller.getPosition()), explored, location))) {
+            if ((PathingUtilities.canReach(new Coordinate(controller.getPosition()), explored, location))) {
                 return true;
             }
         }
@@ -32,15 +31,15 @@ public class ExitDrivingStrategy extends DrivingStrategy {
 
     @Override
     public Coordinate getNextMove(HashMap<Coordinate, MapTile> searchSpace, CarController controller) {
-        if (Pather.isSameType(World.getMap().get(new Coordinate(controller.getPosition())), new MapTile(MapTile.Type.FINISH))) {
+        if (PathingUtilities.isSameType(World.getMap().get(new Coordinate(controller.getPosition())), new MapTile(MapTile.Type.FINISH))) {
             return null;
         }
         Map<Coordinate, MapTile> exits = filterVisible(searchSpace, new MapTile(MapTile.Type.FINISH));
         ArrayList<Coordinate> exitCoords = new ArrayList<Coordinate>(exits.keySet());
         Coordinate currentPosition = new Coordinate(controller.getPosition());
 
-        Coordinate nearestExit = Pather.getNearest(currentPosition, searchSpace, exitCoords);
-        return Pather.getNextMove(currentPosition, searchSpace, nearestExit);
+        Coordinate nearestExit = PathingUtilities.getNearest(currentPosition, searchSpace, exitCoords);
+        return PathingUtilities.getNextMove(currentPosition, searchSpace, nearestExit);
     }
 
 }

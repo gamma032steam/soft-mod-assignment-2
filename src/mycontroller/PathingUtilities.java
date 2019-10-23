@@ -7,7 +7,7 @@ import world.World;
 
 import java.util.*;
 
-public class Pather {
+public class PathingUtilities {
 
     private static HashMap<Coordinate, Integer> distance;
     private static HashMap<Coordinate, Coordinate> previous;
@@ -147,8 +147,8 @@ public class Pather {
             }
         }
 
-        Pather.distance = distance;
-        Pather.previous = previous;
+        PathingUtilities.distance = distance;
+        PathingUtilities.previous = previous;
     }
 
     /**

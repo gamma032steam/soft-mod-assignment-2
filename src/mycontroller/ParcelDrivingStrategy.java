@@ -19,7 +19,7 @@ public class ParcelDrivingStrategy extends DrivingStrategy{
         Map<Coordinate, MapTile> parcels = filterVisible(explored, new ParcelTrap());
 
         for (Coordinate location : parcels.keySet()) {
-            if (Pather.canReach(new Coordinate(controller.getPosition()), explored, location)) {
+            if (PathingUtilities.canReach(new Coordinate(controller.getPosition()), explored, location)) {
                 return true;
             }
         }
@@ -34,7 +34,7 @@ public class ParcelDrivingStrategy extends DrivingStrategy{
         ArrayList<Coordinate> parcelCoords = new ArrayList<Coordinate>(parcels.keySet());
         Coordinate currentPosition = new Coordinate(controller.getPosition());
 
-        Coordinate nearestParcel = Pather.getNearest(currentPosition, explored, parcelCoords);
-        return Pather.getNextMove(currentPosition, explored, nearestParcel);
+        Coordinate nearestParcel = PathingUtilities.getNearest(currentPosition, explored, parcelCoords);
+        return PathingUtilities.getNextMove(currentPosition, explored, nearestParcel);
     }
 }
