@@ -18,12 +18,10 @@ public class ExitDrivingStrategy extends DrivingStrategy {
         }
 
         // Get hashmap with only exit tiles
-        Map<Coordinate, MapTile> exits = explored.entrySet().stream()
-                .filter(entry -> entry.getValue().getType() == MapTile.Type.FINISH)
-                .collect(Collectors.toMap(x->x.getKey(), x->x.getValue()));
+        Map<Coordinate, MapTile> exits = filterVisible(explored, MapTile.Type.FINISH);
 
         for (Coordinate location : exits.keySet()) {
-            if (canPathTo(location)) {
+            if ((Pather.canReach(new Coordinate(controller.getPosition()), explored, location))) {
                 return true;
             }
         }
