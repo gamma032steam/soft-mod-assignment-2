@@ -16,6 +16,8 @@ public class ExploreDrivingStrategy extends DrivingStrategy {
     @Override
     public Coordinate getNextMove(HashMap<Coordinate, MapTile> explored, CarController controller) {
         ArrayList<Coordinate> unexploredCoords = new ArrayList<>();
+
+        //Add all traversable coordinates
         for (Coordinate coord : controller.getMap().keySet()) {
             if (!Pather.isTraversable(controller.getMap().get(coord))) {
                 continue;
@@ -23,12 +25,14 @@ public class ExploreDrivingStrategy extends DrivingStrategy {
             unexploredCoords.add(coord);
         }
 
+        //Remove the seen coordinates
         for (Coordinate coord : explored.keySet()) {
             unexploredCoords.remove(coord);
         }
 
-        Coordinate nearestUnexplored = Pather.findNearestUnexplored(new Coordinate(controller.getPosition()), explored, controller.getMap());
-        Coordinate nextMove = Pather.getNextMove(new Coordinate(controller.getPosition()), controller.getMap(), nearestUnexplored);
+        Coordinate currentPosition = new Coordinate(controller.getPosition());
+        Coordinate nearestUnexplored = Pather.findNearestUnexplored(currentPosition , explored, controller.getMap());
+        Coordinate nextMove = Pather.getNextMove(currentPosition, controller.getMap(), nearestUnexplored);
         return nextMove;
     }
 }

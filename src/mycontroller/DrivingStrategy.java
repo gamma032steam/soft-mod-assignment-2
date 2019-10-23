@@ -9,7 +9,21 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 abstract public class DrivingStrategy {
+    /**
+     * Checks if the given conditions allow for this strategy to be used
+     * @param explored
+     * @param controller
+     * @return True if applicable, false otherwise
+     */
     public abstract boolean isApplicable(HashMap<Coordinate, MapTile> explored, CarController controller);
+
+    /**
+     * Gets the next tile to move to as deemed by the strategy
+     * @param explored Map of tiles the car has seen
+     * @param controller
+     * @return The coordinate of the tile to move to
+     * @throws Exception
+     */
     public abstract Coordinate getNextMove(HashMap<Coordinate, MapTile> explored, CarController controller) throws Exception;
 
     /**
