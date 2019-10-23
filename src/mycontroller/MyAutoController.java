@@ -24,11 +24,13 @@ public class MyAutoController extends CarController{
 		/** Drives the car on behalf of the controller */
 		Driver driver = new Driver(this);
 
-		DrivingStrategy strategy = new ExitDrivingStrategy();
+		CompositeDrivingStrategy strategy = new CompositeDrivingStrategy();
 
 		public MyAutoController(Car car) {
 			super(car);
 			explored = new HashMap<Coordinate, MapTile>();
+			strategy.addStrategy(new ParcelDrivingStrategy());
+			strategy.addStrategy(new ExitDrivingStrategy());
 		}
 
 		@Override
