@@ -25,9 +25,6 @@ public class MyAutoController extends CarController{
 		/** Tiles of the map discovered so far */
 		private HashMap<Coordinate, MapTile> explored;
 
-		/** Drives the car on behalf of the controller */
-		Driver driver = new Driver(this);
-
 		public MyAutoController(Car car) {
 			super(car);
 			explored = new HashMap<Coordinate, MapTile>();
@@ -43,9 +40,14 @@ public class MyAutoController extends CarController{
 			//printMap(explored);
 			try {
 				Coordinate target = Pather.getNextMove(new Coordinate(getPosition()), explored, new Coordinate(4, 5));
-				driver.driveTowards(target);
+				Driver.driveTowards(target, this);
 			} catch (Exception e) {
 				e.printStackTrace();
+				// Back up
+				applyReverseAcceleration();
+				if (getSpeed() == 0) {
+					Driver.setInReverse(true);
+				}
 			}
 		}
 

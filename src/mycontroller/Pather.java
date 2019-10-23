@@ -55,6 +55,11 @@ public class Pather {
     public static Coordinate getNextMove(Coordinate root, HashMap<Coordinate, MapTile> explored, Coordinate target) {
         dijkstra(root, explored, target);
 
+        // We are already there
+        if (root.equals(target)) {
+            return root;
+        }
+
         // Target was not reached
         if (distance.get(target).equals(Integer.MAX_VALUE)) {
             return null;
@@ -152,7 +157,6 @@ public class Pather {
             }
 
             // Get the neighbours
-            System.out.println(getNeighbours(currentNode).size());
             for (Coordinate neighbour: getNeighbours(currentNode)) {
                 // This is a node we've already processed so we shouldn't process it again
                 if (!queue.containsKey(neighbour)) {
@@ -238,7 +242,6 @@ public class Pather {
         } else {
             return DEFAULT_NON_TRAP_WEIGHT.get(tile.getType());
         }
-
     }
 
     /**
