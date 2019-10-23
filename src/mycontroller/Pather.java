@@ -180,6 +180,34 @@ public class Pather {
     }
 
     /**
+     * Finds the first unexplored coordinate from the root
+     * @param root
+     * @param explored
+     * @return
+     */
+    public static Coordinate findNearestUnexplored(Coordinate root, HashMap<Coordinate, MapTile> explored, HashMap<Coordinate, MapTile> world) {
+        ArrayList<Coordinate> queue = new ArrayList<>();
+        ArrayList<Coordinate> seen = new ArrayList<>();
+        queue.add(root);
+
+        while (!queue.isEmpty()) {
+            Coordinate currentNode = queue.remove(0);
+            seen.add(currentNode);
+            if (!explored.containsKey(currentNode)) {
+                return currentNode;
+            }
+
+            for (Coordinate neighbour : getNeighbours(currentNode)) {
+                if (isTraversable(world.get(neighbour)) && !seen.contains(neighbour)) {
+                    queue.add(neighbour);
+                }
+            }
+
+        }
+        return null;
+    }
+
+    /**
      * Analyses a tile for properties that would prevent a car from driving over it
      * @param tile Tile to analyse
      * @return True if a car could drive on this tile, False otherwise
