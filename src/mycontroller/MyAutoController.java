@@ -1,12 +1,8 @@
 package mycontroller;
 
 import controller.CarController;
-import tiles.ParcelTrap;
 import world.Car;
-import world.World;
 
-import java.security.InvalidAlgorithmParameterException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import tiles.MapTile;
@@ -28,6 +24,8 @@ public class MyAutoController extends CarController{
 		/** Drives the car on behalf of the controller */
 		Driver driver = new Driver(this);
 
+		DrivingStrategy strategy = new ExitDrivingStrategy();
+
 		public MyAutoController(Car car) {
 			super(car);
 			explored = new HashMap<Coordinate, MapTile>();
@@ -42,7 +40,7 @@ public class MyAutoController extends CarController{
 			explored.putAll(currentView);
 			//printMap(explored);
 			try {
-				Coordinate target = Pather.getNextMove(new Coordinate(getPosition()), explored, new Coordinate(4, 5));
+				Coordinate target = strategy.getNextMove(explored, this);
 				driver.driveTowards(target);
 			} catch (Exception e) {
 				e.printStackTrace();
