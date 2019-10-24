@@ -7,23 +7,19 @@ import java.util.HashMap;
 
 import tiles.MapTile;
 import utilities.Coordinate;
-import world.World;
-import world.WorldSpatial;
 
 public class MyAutoController extends CarController{
 
 		/** Tiles of the map discovered so far */
 		private HashMap<Coordinate, MapTile> exploredMap;
 
-		private CompositeDrivingStrategy strategy = new CompositeDrivingStrategy();
+		private DrivingStrategy strategy;
 
 		public MyAutoController(Car car) {
 			super(car);
 			// What we have seen in our 9x9 vision
+			strategy = DrivingStrategyFactory.getInstance().getStrategy();
 			exploredMap = new HashMap<Coordinate, MapTile>();
-			strategy.addStrategy(new ParcelDrivingStrategy());
-			strategy.addStrategy(new ExitDrivingStrategy());
-			strategy.addStrategy(new ExploreDrivingStrategy());
 		}
 
 		@Override
