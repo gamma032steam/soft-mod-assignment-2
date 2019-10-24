@@ -35,7 +35,6 @@ public class DriverUtility {
 
     /** Turn based on a relative direction to the current car position */
     private static void control(RelativeDirection relativeDirection, CarController carController) {
-        System.out.print(relativeDirection);
         float speed = carController.getSpeed();
         switch (relativeDirection) {
             case LEFT :
@@ -58,7 +57,6 @@ public class DriverUtility {
                 break;
             case AHEAD:
                 // Go forward only if we are still or in reverse, to limit speed at 1
-                System.out.print(inReverse);
                 if (speed == 0) {
                     carController.applyForwardAcceleration();
                     // Switching out of reverse
@@ -70,7 +68,6 @@ public class DriverUtility {
             case BEHIND:
                 // Go backwards only if we are are still or going forwards
                 if (speed == 0) {
-                    System.out.println("beep beep reversing");
                     carController.applyReverseAcceleration();
                     // Switching into reverse
                     inReverse = true;
