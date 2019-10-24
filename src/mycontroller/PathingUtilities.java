@@ -135,7 +135,6 @@ public class PathingUtilities {
                 }
 
                 // Distance is the distance to the current node plus one extra step
-                // TODO make it try to avoid lava
                 int newDistance = distance.get(currentNode) + 1;
 
                 // Is this the better distance?
@@ -184,7 +183,6 @@ public class PathingUtilities {
      * @param tile Tile to analyse
      * @return True if a car could drive on this tile, False otherwise
      */
-    // TODO make this more comprehensive to not drive over mud
     public static Boolean isTraversable(MapTile tile) {
         return !isSameType(tile, new MapTile(MapTile.Type.WALL)) &&
                !isSameType(tile, new MapTile(MapTile.Type.EMPTY ));

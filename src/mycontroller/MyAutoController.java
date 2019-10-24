@@ -32,7 +32,6 @@ public class MyAutoController extends CarController{
 			
 
 			try {
-				// TODO: Can just make a get exploredMap in the controller, so you don't have to pass it in
 				Coordinate target = strategy.getNextMove(exploredMap, this);
 				if (target == null) {
 					return;
