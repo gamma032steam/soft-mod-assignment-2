@@ -37,13 +37,13 @@ public class MyAutoController extends CarController{
 				if (target == null) {
 					return;
 				}
-				Driver.driveTowards(target, this);
+				DriverUtility.driveTowards(target, this);
 			} catch (Exception e) {
 				e.printStackTrace();
 				// Back up
 				applyReverseAcceleration();
 				if (getSpeed() == 0) {
-					Driver.setInReverse(true);
+					DriverUtility.setInReverse(true);
 				}
 			}
 		}

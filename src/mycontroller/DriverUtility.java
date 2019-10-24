@@ -8,7 +8,7 @@ import java.security.InvalidAlgorithmParameterException;
 
 import static world.WorldSpatial.Direction.*;
 
-public class Driver {
+public class DriverUtility {
     private CarController carController;
     /** Keeps track of whether we are currently reversing */
     private static boolean inReverse = false;
@@ -20,7 +20,7 @@ public class Driver {
         RIGHT
     }
 
-    public Driver(CarController carController) {
+    public DriverUtility(CarController carController) {
         this.carController = carController;
     }
 
@@ -167,6 +167,6 @@ public class Driver {
     }
 
     public static void setInReverse(Boolean inReverse) {
-        Driver.inReverse = inReverse;
+        DriverUtility.inReverse = inReverse;
     }
 }
